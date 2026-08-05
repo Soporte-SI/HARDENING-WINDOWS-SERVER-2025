@@ -1,0 +1,39 @@
+---
+# win2025_cis_hardening - main task list
+# Loads every roles/win2025_cis_hardening/vars/section*.yml file (each control
+# list is namespaced, e.g. win2025cis_section1_secedit_items) and then walks
+# through each CIS section's task file. Level (1/2) and per-control exceptions
+# are enforced inside each individual task's `when:` condition, not here.
+
+- name: Load all CIS section variable files
+  ansible.builtin.include_vars:
+    dir: "{{ role_path }}/vars"
+  tags: always
+
+- name: Include Section 1 - Account Policies tasks
+  ansible.builtin.include_tasks: section1_account_policies.yml
+  tags: [section1, account_policies]
+
+- name: Include Section 2 - Local Policies / Security Options tasks
+  ansible.builtin.include_tasks: section2_local_policies_security_options.yml
+  tags: [section2, local_policies, security_options]
+
+- name: Include Section 5 - System Services tasks
+  ansible.builtin.include_tasks: section5_system_services.yml
+  tags: [section5, system_services]
+
+- name: Include Section 9 - Windows Defender Firewall tasks
+  ansible.builtin.include_tasks: section9_firewall.yml
+  tags: [section9, firewall]
+
+- name: Include Section 17 - Advanced Audit Policy tasks
+  ansible.builtin.include_tasks: section17_advanced_audit_policy.yml
+  tags: [section17, audit_policy]
+
+- name: Include Section 18 - Administrative Templates (Computer) tasks
+  ansible.builtin.include_tasks: section18_administrative_templates_computer.yml
+  tags: [section18, administrative_templates_computer]
+
+- name: Include Section 19 - Administrative Templates (User) tasks
+  ansible.builtin.include_tasks: section19_administrative_templates_user.yml
+  tags: [section19, administrative_templates_user]

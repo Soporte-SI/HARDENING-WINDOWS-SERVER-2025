@@ -1,0 +1,57 @@
+---
+# Section 2 - Local Policies (User Rights Assignment / Security Options)
+# Exception toggle for control X.Y.Z: win2025cis_rule_X_Y_Z (see defaults/main.yml)
+
+- name: "CIS 2.2 - Configure User Rights Assignment"
+  ansible.windows.win_user_right:
+    name: "{{ item.name }}"
+    users: "{{ item.users }}"
+    action: set
+  loop: "{{ win2025cis_section2_user_rights }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section2_user_rights | map(attribute='id') | list }}"
+
+- name: "CIS 2.3 - Configure Security Options (secedit System Access)"
+  community.windows.win_security_policy:
+    section: System Access
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop: "{{ win2025cis_section2_secedit_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section2_secedit_items | map(attribute='id') | list }}"
+
+- name: "CIS 2.3.1.3/2.3.1.4 - Rename Administrator/Guest accounts (org-specific, see group_vars)"
+  community.windows.win_security_policy:
+    section: System Access
+    key: "{{ item.key }}"
+    value: "{{ vars[item.value_var] }}"
+  loop: "{{ win2025cis_section2_rename_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section2_rename_items | map(attribute='id') | list }}"
+
+- name: "CIS 2.3 - Configure Security Options (registry)"
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ vars[item.data_var] if item.data_var is defined else item.data }}"
+    type: "{{ item.type }}"
+  loop: "{{ win2025cis_section2_registry_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section2_registry_items | map(attribute='id') | list }}"
+  notify: Run gpupdate

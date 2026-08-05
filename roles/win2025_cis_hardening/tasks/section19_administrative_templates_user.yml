@@ -1,0 +1,21 @@
+---
+# Section 19 - Administrative Templates (User)
+# Exception toggle for control X.Y.Z: win2025cis_rule_X_Y_Z (see defaults/main.yml)
+# Applied to HKU:\.DEFAULT (Default user profile) - see vars/section19_...yml
+# header note: this seeds NEW interactive logons, it does not retroactively
+# change already-existing/loaded profiles.
+
+- name: "CIS 19.x - Configure Administrative Templates (User) - REG_DWORD values"
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: dword
+  loop: "{{ win2025cis_section19_registry_dword_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section19_registry_dword_items | map(attribute='id') | list }}"
+  notify: Run gpupdate

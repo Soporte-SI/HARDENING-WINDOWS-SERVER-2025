@@ -1,0 +1,186 @@
+---
+# Section 17 - Advanced Audit Policy Configuration (CIS Microsoft Windows
+# Server 2025 Benchmark v2.1.0)
+# Implemented via ansible.windows.win_audit_policy_system (subcategory +
+# audit_type: success/failure), which wraps auditpol.exe and is idempotent
+# (module checks the current subcategory setting before changing it).
+# DC-only subcategories (e.g. Audit Kerberos Authentication Service, Audit
+# Directory Service Access) are excluded here - see docs/coverage_matrix.csv.
+# Note: 2.3.2.1 (section 2) sets "Force audit policy subcategory settings to
+# override audit policy category settings" to Enabled, which is a
+# prerequisite for these subcategory settings to take effect.
+win2025cis_section17_audit_items:
+- id: 17.1.1
+  level: 1
+  title: Ensure 'Audit Credential Validation' is set to 'Success and Failure'
+  subcategory: Audit Credential Validation
+  audit_type:
+  - success
+  - failure
+- id: 17.2.1
+  level: 1
+  title: Ensure 'Audit Application Group Management' is set to 'Success and Failure'
+  subcategory: Audit Application Group Management
+  audit_type:
+  - success
+  - failure
+- id: 17.2.5
+  level: 1
+  title: Ensure 'Audit Security Group Management' is set to include 'Success'
+  subcategory: Audit Security Group Management
+  audit_type:
+  - success
+- id: 17.2.6
+  level: 1
+  title: Ensure 'Audit User Account Management' is set to 'Success and Failure'
+  subcategory: Audit User Account Management
+  audit_type:
+  - success
+  - failure
+- id: 17.3.1
+  level: 1
+  title: Ensure 'Audit PNP Activity' is set to include 'Success'
+  subcategory: Audit PNP Activity
+  audit_type:
+  - success
+- id: 17.3.2
+  level: 1
+  title: Ensure 'Audit Process Creation' is set to include 'Success'
+  subcategory: Audit Process Creation
+  audit_type:
+  - success
+- id: 17.5.1
+  level: 1
+  title: Ensure 'Audit Account Lockout' is set to include 'Failure'
+  subcategory: Audit Account Lockout
+  audit_type:
+  - failure
+- id: 17.5.2
+  level: 1
+  title: Ensure 'Audit Group Membership' is set to include 'Success'
+  subcategory: Audit Group Membership
+  audit_type:
+  - success
+- id: 17.5.3
+  level: 1
+  title: Ensure 'Audit Logoff' is set to include 'Success'
+  subcategory: Audit Logoff
+  audit_type:
+  - success
+- id: 17.5.4
+  level: 1
+  title: Ensure 'Audit Logon' is set to 'Success and Failure'
+  subcategory: Audit Logon
+  audit_type:
+  - success
+  - failure
+- id: 17.5.5
+  level: 1
+  title: Ensure 'Audit Other Logon/Logoff Events' is set to 'Success and Failure'
+  subcategory: Audit Other Logon/Logoff Events
+  audit_type:
+  - success
+  - failure
+- id: 17.5.6
+  level: 1
+  title: Ensure 'Audit Special Logon' is set to include 'Success'
+  subcategory: Audit Special Logon
+  audit_type:
+  - success
+- id: 17.6.1
+  level: 1
+  title: Ensure 'Audit Detailed File Share' is set to include 'Failure'
+  subcategory: Audit Detailed File Share
+  audit_type:
+  - failure
+- id: 17.6.2
+  level: 1
+  title: Ensure 'Audit File Share' is set to 'Success and Failure'
+  subcategory: Audit File Share
+  audit_type:
+  - success
+  - failure
+- id: 17.6.3
+  level: 1
+  title: Ensure 'Audit Other Object Access Events' is set to 'Success and Failure'
+  subcategory: Audit Other Object Access Events
+  audit_type:
+  - success
+  - failure
+- id: 17.6.4
+  level: 1
+  title: Ensure 'Audit Removable Storage' is set to 'Success and Failure'
+  subcategory: Audit Removable Storage
+  audit_type:
+  - success
+  - failure
+- id: 17.7.1
+  level: 1
+  title: Ensure 'Audit Audit Policy Change' is set to include 'Success'
+  subcategory: Audit Audit Policy Change
+  audit_type:
+  - success
+- id: 17.7.2
+  level: 1
+  title: Ensure 'Audit Authentication Policy Change' is set to include 'Success'
+  subcategory: Audit Authentication Policy Change
+  audit_type:
+  - success
+- id: 17.7.3
+  level: 1
+  title: Ensure 'Audit Authorization Policy Change' is set to include 'Success'
+  subcategory: Audit Authorization Policy Change
+  audit_type:
+  - success
+- id: 17.7.4
+  level: 1
+  title: Ensure 'Audit MPSSVC Rule-Level Policy Change' is set to 'Success and Failure'
+  subcategory: Audit MPSSVC Rule-Level Policy Change
+  audit_type:
+  - success
+  - failure
+- id: 17.7.5
+  level: 1
+  title: Ensure 'Audit Other Policy Change Events' is set to include 'Failure'
+  subcategory: Audit Other Policy Change Events
+  audit_type:
+  - failure
+- id: 17.8.1
+  level: 1
+  title: Ensure 'Audit Sensitive Privilege Use' is set to 'Success'
+  subcategory: Audit Sensitive Privilege Use
+  audit_type:
+  - success
+- id: 17.9.1
+  level: 1
+  title: Ensure 'Audit IPsec Driver' is set to 'Success and Failure'
+  subcategory: Audit IPsec Driver
+  audit_type:
+  - success
+  - failure
+- id: 17.9.2
+  level: 1
+  title: Ensure 'Audit Other System Events' is set to 'Success and Failure'
+  subcategory: Audit Other System Events
+  audit_type:
+  - success
+  - failure
+- id: 17.9.3
+  level: 1
+  title: Ensure 'Audit Security State Change' is set to include 'Success'
+  subcategory: Audit Security State Change
+  audit_type:
+  - success
+- id: 17.9.4
+  level: 1
+  title: Ensure 'Audit Security System Extension' is set to include 'Success'
+  subcategory: Audit Security System Extension
+  audit_type:
+  - success
+- id: 17.9.5
+  level: 1
+  title: Ensure 'Audit System Integrity' is set to 'Success and Failure'
+  subcategory: Audit System Integrity
+  audit_type:
+  - success
+  - failure

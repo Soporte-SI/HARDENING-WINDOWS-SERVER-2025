@@ -1,0 +1,19 @@
+---
+# Section 17 - Advanced Audit Policy Configuration
+# Exception toggle for control X.Y.Z: win2025cis_rule_X_Y_Z (see defaults/main.yml)
+# Prerequisite: CIS 2.3.2.1 ("Force audit policy subcategory settings to
+# override audit policy category settings") must be Enabled - see section2 -
+# for these subcategory settings to be honoured over any legacy category
+# audit policy.
+
+- name: "CIS 17.x - Configure Advanced Audit Policy subcategories"
+  ansible.windows.win_audit_policy_system:
+    subcategory: "{{ item.subcategory }}"
+    audit_type: "{{ item.audit_type }}"
+  loop: "{{ win2025cis_section17_audit_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section17_audit_items | map(attribute='id') | list }}"

@@ -1,0 +1,30 @@
+---
+# Variables applied to every host in the [windows] inventory group.
+# Anything defined here overrides roles/win2025_cis_hardening/defaults/main.yml.
+
+# Apply Level 1 + Level 2 (full Member Server hardening). Set to 1 to apply
+# only Level 1 controls.
+win2025cis_level: 2
+
+# --- Organization-specific values (override the safe defaults from defaults/main.yml) ---
+# win2025cis_rename_administrator_account: LocalAdmin
+# win2025cis_rename_guest_account: LocalGuest
+# win2025cis_legal_notice_caption: "Authorized Use Only"
+# win2025cis_legal_notice_text: >-
+#   This system is restricted to authorized users for authorized business
+#   purposes only. Unauthorized access is prohibited.
+
+# --- Example per-control exceptions ---------------------------------------
+# Every implemented control has a matching win2025cis_rule_<id_with_underscores>
+# boolean in roles/win2025_cis_hardening/defaults/main.yml (all default true).
+# Set any of them to `false` here (or in host_vars/<hostname>.yml for a single
+# server) to skip that control while still applying everything else.
+#
+# Example: this server still needs RDP admin-only Network Level Auth handled
+# by a third-party jump host product, so skip 18.9.37.1 (Terminal Services
+# unsolicited remote assistance) on this environment:
+# win2025cis_rule_18_9_37_1: false
+#
+# Example: skip renaming the local Administrator account because it is
+# already managed by an external LAPS-like tool that expects the default name:
+# win2025cis_rule_2_3_1_3: false

@@ -1,0 +1,30 @@
+---
+# Section 1 - Account Policies (Password Policy / Account Lockout Policy)
+# Exception toggle for control X.Y.Z: win2025cis_rule_X_Y_Z (see defaults/main.yml)
+
+- name: "CIS 1.1/1.2 - Configure Password/Lockout Policy (secedit System Access)"
+  community.windows.win_security_policy:
+    section: System Access
+    key: "{{ item.key }}"
+    value: "{{ item.value }}"
+  loop: "{{ win2025cis_section1_secedit_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section1_secedit_items | map(attribute='id') | list }}"
+
+- name: "CIS 1.1.6 - Relax minimum password length limits (registry)"
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: "{{ item.type }}"
+  loop: "{{ win2025cis_section1_registry_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section1_registry_items | map(attribute='id') | list }}"

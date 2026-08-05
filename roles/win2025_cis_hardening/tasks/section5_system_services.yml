@@ -1,0 +1,16 @@
+---
+# Section 5 - System Services
+# Exception toggle for control X.Y: win2025cis_rule_X_Y (see defaults/main.yml)
+
+- name: "CIS 5.x - Disable insecure system services"
+  ansible.windows.win_service:
+    name: "{{ item.name }}"
+    start_mode: "{{ item.start_mode }}"
+    state: "{{ item.state }}"
+  loop: "{{ win2025cis_section5_service_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section5_service_items | map(attribute='id') | list }}"

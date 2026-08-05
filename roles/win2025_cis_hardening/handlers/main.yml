@@ -1,0 +1,4 @@
+---
+- name: Run gpupdate
+  ansible.windows.win_command: gpupdate /force
+  listen: Run gpupdate

@@ -1,0 +1,63 @@
+---
+# Section 1 - Account Policies (CIS Microsoft Windows Server 2025 Benchmark v2.1.0)
+# 1.1 Password Policy / 1.2 Account Lockout Policy
+# Source of truth: outputs/win2025_controls_extracted.json (extracted from the official CIS PDF)
+# secedit "System Access" keys applied via community.windows.win_security_policy.
+# 1.1.6 is a native registry value (SAM RelaxMinimumPasswordLengthLimits), not a secedit key.
+win2025cis_section1_secedit_items:
+- id: 1.1.1
+  level: 1
+  title: Enforce password history
+  key: PasswordHistorySize
+  value: '24'
+- id: 1.1.2
+  level: 1
+  title: Maximum password age
+  key: MaximumPasswordAge
+  value: '365'
+- id: 1.1.3
+  level: 1
+  title: Minimum password age
+  key: MinimumPasswordAge
+  value: '1'
+- id: 1.1.4
+  level: 1
+  title: Minimum password length
+  key: MinimumPasswordLength
+  value: '14'
+- id: 1.1.5
+  level: 1
+  title: Password must meet complexity requirements
+  key: PasswordComplexity
+  value: '1'
+- id: 1.1.7
+  level: 1
+  title: Store passwords using reversible encryption
+  key: ClearTextPassword
+  value: '0'
+- id: 1.2.1
+  level: 1
+  title: Account lockout duration
+  key: LockoutDuration
+  value: '15'
+- id: 1.2.2
+  level: 1
+  title: Account lockout threshold
+  key: LockoutBadCount
+  value: '5'
+# 1.2.3 (Allow Administrator account lockout) is CIS-rated "Manual" (audit
+# requires manual verification) - intentionally NOT automated here, see
+# docs/coverage_matrix.csv.
+- id: 1.2.4
+  level: 1
+  title: Reset account lockout counter after
+  key: ResetLockoutCount
+  value: '15'
+win2025cis_section1_registry_items:
+- id: 1.1.6
+  level: 1
+  title: Relax minimum password length limits
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\SAM
+  name: RelaxMinimumPasswordLengthLimits
+  data: 1
+  type: dword

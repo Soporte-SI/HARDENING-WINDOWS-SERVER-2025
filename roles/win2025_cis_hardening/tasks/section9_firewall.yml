@@ -1,0 +1,17 @@
+---
+# Section 9 - Windows Defender Firewall with Advanced Security
+# Exception toggle for control X.Y.Z: win2025cis_rule_X_Y_Z (see defaults/main.yml)
+
+- name: "CIS 9.x - Configure Windows Defender Firewall profile properties"
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ vars[item.data_var] if item.data_var is defined else item.data }}"
+    type: "{{ item.type }}"
+  loop: "{{ win2025cis_section9_firewall_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section9_firewall_items | map(attribute='id') | list }}"

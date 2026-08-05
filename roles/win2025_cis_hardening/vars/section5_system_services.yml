@@ -1,0 +1,12 @@
+---
+# Section 5 - System Services (CIS Microsoft Windows Server 2025 Benchmark v2.1.0)
+# Implemented via ansible.windows.win_service.
+# 5.1 ('Print Spooler (Spooler)' disabled, DC only) is out of scope for a
+# Member Server profile - see docs/coverage_matrix.csv.
+win2025cis_section5_service_items:
+  - id: "5.2"
+    level: 2
+    title: "Ensure 'Print Spooler (Spooler)' is set to 'Disabled' (MS only)"
+    name: Spooler
+    start_mode: disabled
+    state: stopped

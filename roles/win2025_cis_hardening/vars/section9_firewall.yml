@@ -1,0 +1,175 @@
+---
+# Section 9 - Windows Defender Firewall with Advanced Security (CIS Microsoft
+# Windows Server 2025 Benchmark v2.1.0)
+# Implemented via ansible.windows.win_regedit against the GPO-backed registry
+# locations Microsoft documents for these "Windows Defender Firewall
+# Properties" settings:
+#   HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\<Domain|Private|Public>Profile
+#   HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\<Profile>Profile\Logging
+# (This is distinct from individual inbound/outbound rules, which the CIS
+# benchmark does not mandate specific values for at this level and would be
+# managed with community.windows.win_firewall_rule instead.)
+# Log file path/name is organization-specific; override
+# win2025cis_firewall_<profile>_log_path in group_vars if needed.
+win2025cis_section9_firewall_items:
+- id: 9.1.1
+  level: 1
+  title: 'Windows Firewall: Domain: Firewall state'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile
+  name: EnableFirewall
+  data: 1
+  type: dword
+- id: 9.1.2
+  level: 1
+  title: 'Windows Firewall: Domain: Inbound connections'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile
+  name: DefaultInboundAction
+  data: 1
+  type: dword
+- id: 9.1.3
+  level: 1
+  title: 'Windows Firewall: Domain: Settings: Display a notification'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile
+  name: DisableNotifications
+  data: 1
+  type: dword
+- id: 9.1.4
+  level: 1
+  title: 'Windows Firewall: Domain: Logging: Name'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging
+  name: LogFilePath
+  data_var: win2025cis_firewall_domain_log_path
+  type: string
+- id: 9.1.5
+  level: 1
+  title: 'Windows Firewall: Domain: Logging: Size limit (KB)'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging
+  name: LogFileSize
+  data: 16384
+  type: dword
+- id: 9.1.6
+  level: 1
+  title: 'Windows Firewall: Domain: Logging: Log dropped packets'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging
+  name: LogDroppedPackets
+  data: 1
+  type: dword
+- id: 9.1.7
+  level: 1
+  title: 'Windows Firewall: Domain: Logging: Log successful connections'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\DomainProfile\Logging
+  name: LogSuccessfulConnections
+  data: 1
+  type: dword
+- id: 9.2.1
+  level: 1
+  title: 'Windows Firewall: Private: Firewall state'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile
+  name: EnableFirewall
+  data: 1
+  type: dword
+- id: 9.2.2
+  level: 1
+  title: 'Windows Firewall: Private: Inbound connections'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile
+  name: DefaultInboundAction
+  data: 1
+  type: dword
+- id: 9.2.3
+  level: 1
+  title: 'Windows Firewall: Private: Settings: Display a notification'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile
+  name: DisableNotifications
+  data: 1
+  type: dword
+- id: 9.2.4
+  level: 1
+  title: 'Windows Firewall: Private: Logging: Name'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging
+  name: LogFilePath
+  data_var: win2025cis_firewall_private_log_path
+  type: string
+- id: 9.2.5
+  level: 1
+  title: 'Windows Firewall: Private: Logging: Size limit (KB)'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging
+  name: LogFileSize
+  data: 16384
+  type: dword
+- id: 9.2.6
+  level: 1
+  title: 'Windows Firewall: Private: Logging: Log dropped packets'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging
+  name: LogDroppedPackets
+  data: 1
+  type: dword
+- id: 9.2.7
+  level: 1
+  title: 'Windows Firewall: Private: Logging: Log successful connections'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PrivateProfile\Logging
+  name: LogSuccessfulConnections
+  data: 1
+  type: dword
+- id: 9.3.1
+  level: 1
+  title: 'Windows Firewall: Public: Firewall state'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile
+  name: EnableFirewall
+  data: 1
+  type: dword
+- id: 9.3.2
+  level: 1
+  title: 'Windows Firewall: Public: Inbound connections'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile
+  name: DefaultInboundAction
+  data: 1
+  type: dword
+- id: 9.3.3
+  level: 1
+  title: 'Windows Firewall: Public: Settings: Display a notification'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile
+  name: DisableNotifications
+  data: 1
+  type: dword
+- id: 9.3.4
+  level: 1
+  title: 'Windows Firewall: Public: Settings: Apply local firewall rules'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile
+  name: AllowLocalPolicyMerge
+  data: 0
+  type: dword
+- id: 9.3.5
+  level: 1
+  title: 'Windows Firewall: Public: Settings: Apply local connection security rules'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile
+  name: AllowLocalIPsecPolicyMerge
+  data: 0
+  type: dword
+- id: 9.3.6
+  level: 1
+  title: 'Windows Firewall: Public: Logging: Name'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging
+  name: LogFilePath
+  data_var: win2025cis_firewall_public_log_path
+  type: string
+- id: 9.3.7
+  level: 1
+  title: 'Windows Firewall: Public: Logging: Size limit (KB)'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging
+  name: LogFileSize
+  data: 16384
+  type: dword
+- id: 9.3.8
+  level: 1
+  title: 'Windows Firewall: Public: Logging: Log dropped packets'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging
+  name: LogDroppedPackets
+  data: 1
+  type: dword
+- id: 9.3.9
+  level: 1
+  title: 'Windows Firewall: Public: Logging: Log successful connections'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsFirewall\PublicProfile\Logging
+  name: LogSuccessfulConnections
+  data: 1
+  type: dword

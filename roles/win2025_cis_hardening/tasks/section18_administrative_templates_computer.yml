@@ -1,0 +1,50 @@
+---
+# Section 18 - Administrative Templates (Computer)
+# Exception toggle for control X.Y.Z: win2025cis_rule_X_Y_Z (see defaults/main.yml)
+# NOTE: Administrative Templates settings are Group Policy Client Side
+# Extension driven; some take effect immediately, others only after a
+# gpupdate/logoff/reboot cycle (see handlers/main.yml + README).
+
+- name: "CIS 18.x - Configure Administrative Templates (Computer) - REG_DWORD values"
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: dword
+  loop: "{{ win2025cis_section18_registry_dword_items }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ win2025cis_section18_registry_dword_items | map(attribute='id') | list }}"
+  notify: Run gpupdate
+
+- name: "CIS 18.x - Configure Administrative Templates (Computer) - REG_SZ values"
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    data: "{{ item.data }}"
+    type: string
+  loop: "{{ win2025cis_section18_registry_string_items | default([]) }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ (win2025cis_section18_registry_string_items | default([])) | map(attribute='id') | list }}"
+  notify: Run gpupdate
+
+- name: "CIS 18.x - Configure Administrative Templates (Computer) - values that must be absent"
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    name: "{{ item.name }}"
+    state: absent
+  loop: "{{ win2025cis_section18_registry_absent_items | default([]) }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.title }}"
+  when: >-
+    win2025cis_level >= item.level and
+    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
+  tags: "{{ (win2025cis_section18_registry_absent_items | default([])) | map(attribute='id') | list }}"
+  notify: Run gpupdate

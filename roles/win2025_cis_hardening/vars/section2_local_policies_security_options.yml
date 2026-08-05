@@ -1,0 +1,686 @@
+---
+# Section 2 - Local Policies (CIS Microsoft Windows Server 2025 Benchmark v2.1.0)
+# 2.2 User Rights Assignment (ansible.windows.win_user_right)
+# 2.3 Security Options (mix of community.windows.win_security_policy / ansible.windows.win_regedit)
+#
+# Notes:
+# - 2.3.11.7 and 2.3.11.8 ("LDAP client encryption requirements" / "LDAP client signing requirements")
+#   both map to the same registry value (LDAPClientIntegrity) per Microsoft documentation; CIS lists them
+#   as two separate recommendation IDs but they configure the same underlying control.
+# - 2.3.1.3 / 2.3.1.4 (rename administrator/guest account) use org-specific values, see group_vars/windows.yml.
+win2025cis_section2_user_rights:
+- id: 2.2.1
+  level: 1
+  title: Access Credential Manager as a trusted caller
+  name: SeTrustedCredManAccessPrivilege
+  users: []
+- id: 2.2.3
+  level: 1
+  title: Access this computer from the network (MS only)
+  name: SeNetworkLogonRight
+  users:
+  - Administrators
+  - Authenticated Users
+- id: 2.2.4
+  level: 1
+  title: Act as part of the operating system
+  name: SeTcbPrivilege
+  users: []
+- id: 2.2.6
+  level: 1
+  title: Adjust memory quotas for a process
+  name: SeIncreaseQuotaPrivilege
+  users:
+  - Administrators
+  - LOCAL SERVICE
+  - NETWORK SERVICE
+- id: 2.2.8
+  level: 1
+  title: Allow log on locally (MS only)
+  name: SeInteractiveLogonRight
+  users:
+  - Administrators
+- id: 2.2.10
+  level: 1
+  title: Allow log on through Remote Desktop Services (MS only)
+  name: SeRemoteInteractiveLogonRight
+  users:
+  - Administrators
+  - Remote Desktop Users
+- id: 2.2.11
+  level: 1
+  title: Back up files and directories
+  name: SeBackupPrivilege
+  users:
+  - Administrators
+- id: 2.2.12
+  level: 1
+  title: Change the system time
+  name: SeSystemtimePrivilege
+  users:
+  - Administrators
+  - LOCAL SERVICE
+- id: 2.2.13
+  level: 1
+  title: Create a pagefile
+  name: SeCreatePagefilePrivilege
+  users:
+  - Administrators
+- id: 2.2.14
+  level: 1
+  title: Create a token object
+  name: SeCreateTokenPrivilege
+  users: []
+- id: 2.2.15
+  level: 1
+  title: Create global objects
+  name: SeCreateGlobalPrivilege
+  users:
+  - Administrators
+  - LOCAL SERVICE
+  - NETWORK SERVICE
+  - SERVICE
+- id: 2.2.16
+  level: 1
+  title: Create permanent shared objects
+  name: SeCreatePermanentPrivilege
+  users: []
+- id: 2.2.18
+  level: 1
+  title: Create symbolic links (MS only)
+  name: SeCreateSymbolicLinkPrivilege
+  users:
+  - Administrators
+  - NT VIRTUAL MACHINE\Virtual Machines
+- id: 2.2.19
+  level: 1
+  title: Debug programs
+  name: SeDebugPrivilege
+  users:
+  - Administrators
+- id: 2.2.21
+  level: 1
+  title: Deny access to this computer from the network (MS only)
+  name: SeDenyNetworkLogonRight
+  users:
+  - Guests
+  - Local account and member of Administrators group
+- id: 2.2.22
+  level: 1
+  title: Deny log on as a batch job
+  name: SeDenyBatchLogonRight
+  users:
+  - Guests
+- id: 2.2.23
+  level: 1
+  title: Deny log on as a service
+  name: SeDenyServiceLogonRight
+  users:
+  - Guests
+- id: 2.2.24
+  level: 1
+  title: Deny log on locally
+  name: SeDenyInteractiveLogonRight
+  users:
+  - Guests
+- id: 2.2.26
+  level: 1
+  title: Deny log on through Remote Desktop Services (MS only)
+  name: SeDenyRemoteInteractiveLogonRight
+  users:
+  - Guests
+  - Local account
+- id: 2.2.28
+  level: 1
+  title: Enable computer and user accounts to be trusted for delegation (MS only)
+  name: SeEnableDelegationPrivilege
+  users: []
+- id: 2.2.29
+  level: 1
+  title: Force shutdown from a remote system
+  name: SeRemoteShutdownPrivilege
+  users:
+  - Administrators
+- id: 2.2.30
+  level: 1
+  title: Generate security audits
+  name: SeAuditPrivilege
+  users:
+  - LOCAL SERVICE
+  - NETWORK SERVICE
+  - RESTRICTED SERVICES\PrintSpoolerService
+- id: 2.2.32
+  level: 1
+  title: Impersonate a client after authentication (MS only)
+  name: SeImpersonatePrivilege
+  users:
+  - Administrators
+  - LOCAL SERVICE
+  - NETWORK SERVICE
+  - SERVICE
+  - RESTRICTED SERVICES\PrintSpoolerService
+- id: 2.2.33
+  level: 1
+  title: Increase scheduling priority
+  name: SeIncreaseBasePriorityPrivilege
+  users:
+  - Administrators
+  - Window Manager\Window Manager Group
+- id: 2.2.34
+  level: 1
+  title: Load and unload device drivers
+  name: SeLoadDriverPrivilege
+  users:
+  - Administrators
+- id: 2.2.35
+  level: 1
+  title: Lock pages in memory
+  name: SeLockMemoryPrivilege
+  users: []
+- id: 2.2.38
+  level: 1
+  title: Manage auditing and security log (MS only)
+  name: SeSecurityPrivilege
+  users:
+  - Administrators
+- id: 2.2.39
+  level: 1
+  title: Modify an object label
+  name: SeRelabelPrivilege
+  users: []
+- id: 2.2.40
+  level: 1
+  title: Modify firmware environment values
+  name: SeSystemEnvironmentPrivilege
+  users:
+  - Administrators
+- id: 2.2.41
+  level: 1
+  title: Perform volume maintenance tasks
+  name: SeManageVolumePrivilege
+  users:
+  - Administrators
+- id: 2.2.42
+  level: 1
+  title: Profile single process
+  name: SeProfileSingleProcessPrivilege
+  users:
+  - Administrators
+- id: 2.2.43
+  level: 1
+  title: Profile system performance
+  name: SeSystemProfilePrivilege
+  users:
+  - Administrators
+  - NT SERVICE\WdiServiceHost
+- id: 2.2.44
+  level: 1
+  title: Replace a process level token
+  name: SeAssignPrimaryTokenPrivilege
+  users:
+  - LOCAL SERVICE
+  - NETWORK SERVICE
+- id: 2.2.45
+  level: 1
+  title: Restore files and directories
+  name: SeRestorePrivilege
+  users:
+  - Administrators
+- id: 2.2.46
+  level: 1
+  title: Shut down the system
+  name: SeShutdownPrivilege
+  users:
+  - Administrators
+- id: 2.2.48
+  level: 1
+  title: Take ownership of files or other objects
+  name: SeTakeOwnershipPrivilege
+  users:
+  - Administrators
+win2025cis_section2_secedit_items:
+- id: 2.3.1.1
+  level: 1
+  title: 'Accounts: Guest account status (MS only)'
+  key: EnableGuestAccount
+  value: '0'
+- id: 2.3.10.1
+  level: 1
+  title: 'Network access: Allow anonymous SID/Name translation'
+  key: LSAAnonymousNameLookup
+  value: '0'
+# 2.3.11.5 (Network security: Force logoff when logon hours expire) is
+# CIS-rated "Manual" (audit requires manual verification) - intentionally NOT
+# automated here, see docs/coverage_matrix.csv.
+win2025cis_section2_rename_items:
+- id: 2.3.1.3
+  level: 1
+  title: 'Accounts: Rename administrator account'
+  key: NewAdministratorName
+  value_var: win2025cis_rename_administrator_account
+- id: 2.3.1.4
+  level: 1
+  title: 'Accounts: Rename guest account'
+  key: NewGuestName
+  value_var: win2025cis_rename_guest_account
+win2025cis_section2_registry_items:
+- id: 2.3.1.2
+  level: 1
+  title: 'Accounts: Limit local account use of blank passwords to console logon only'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: LimitBlankPasswordUse
+  data: 1
+  type: dword
+- id: 2.3.2.1
+  level: 1
+  title: 'Audit: Force audit policy subcategory settings (Windows Vista or later) to override audit policy category settings'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: SCENoApplyLegacyAuditPolicy
+  data: 1
+  type: dword
+- id: 2.3.2.2
+  level: 1
+  title: 'Audit: Shut down system immediately if unable to log security audits'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: CrashOnAuditFail
+  data: 0
+  type: dword
+- id: 2.3.4.1
+  level: 1
+  title: 'Devices: Prevent users from installing printer drivers'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Print\Providers\LanMan Print Services\Servers
+  name: AddPrinterDrivers
+  data: 1
+  type: dword
+- id: 2.3.6.1
+  level: 1
+  title: 'Domain member: Digitally encrypt or sign secure channel data (always)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+  name: RequireSignOrSeal
+  data: 1
+  type: dword
+- id: 2.3.6.2
+  level: 1
+  title: 'Domain member: Digitally encrypt secure channel data (when possible)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+  name: SealSecureChannel
+  data: 1
+  type: dword
+- id: 2.3.6.3
+  level: 1
+  title: 'Domain member: Digitally sign secure channel data (when possible)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+  name: SignSecureChannel
+  data: 1
+  type: dword
+- id: 2.3.6.4
+  level: 1
+  title: 'Domain member: Disable machine account password changes'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+  name: DisablePasswordChange
+  data: 0
+  type: dword
+- id: 2.3.6.5
+  level: 1
+  title: 'Domain member: Maximum machine account password age'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+  name: MaximumPasswordAge
+  data: 30
+  type: dword
+- id: 2.3.6.6
+  level: 1
+  title: 'Domain member: Require strong (Windows 2000 or later) session key'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
+  name: RequireStrongKey
+  data: 1
+  type: dword
+- id: 2.3.7.1
+  level: 2
+  title: 'Interactive logon: Do not require CTRL+ALT+DEL'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: DisableCAD
+  data: 0
+  type: dword
+- id: 2.3.7.2
+  level: 1
+  title: 'Interactive logon: Don''t display last signed-in'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: DontDisplayLastUserName
+  data: 1
+  type: dword
+- id: 2.3.7.3
+  level: 1
+  title: 'Interactive logon: Machine inactivity limit'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: InactivityTimeoutSecs
+  data: 900
+  type: dword
+- id: 2.3.7.4
+  level: 1
+  title: 'Interactive logon: Message text for users attempting to log on'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: LegalNoticeText
+  data_var: win2025cis_legal_notice_text
+  type: string
+- id: 2.3.7.5
+  level: 1
+  title: 'Interactive logon: Message title for users attempting to log on'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: LegalNoticeCaption
+  data_var: win2025cis_legal_notice_caption
+  type: string
+- id: 2.3.7.6
+  level: 2
+  title: 'Interactive logon: Number of previous logons to cache (in case domain controller is not available) (MS only)'
+  path: HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+  name: CachedLogonsCount
+  data: '4'
+  type: string
+- id: 2.3.7.7
+  level: 1
+  title: 'Interactive logon: Prompt user to change password before expiration'
+  path: HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+  name: PasswordExpiryWarning
+  data: 14
+  type: dword
+- id: 2.3.7.8
+  level: 1
+  title: 'Interactive logon: Require Domain Controller Authentication to unlock workstation (MS only)'
+  path: HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+  name: ForceUnlockLogon
+  data: 1
+  type: dword
+- id: 2.3.7.9
+  level: 1
+  title: 'Interactive logon: Smart card removal behavior'
+  path: HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
+  name: ScRemoveOption
+  data: '1'
+  type: string
+- id: 2.3.8.1
+  level: 1
+  title: 'Microsoft network client: Digitally sign communications (always)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters
+  name: RequireSecuritySignature
+  data: 1
+  type: dword
+- id: 2.3.8.2
+  level: 1
+  title: 'Microsoft network client: Send unencrypted password to third-party SMB servers'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters
+  name: EnablePlainTextPassword
+  data: 0
+  type: dword
+- id: 2.3.9.1
+  level: 1
+  title: 'Microsoft network server: Amount of idle time required before suspending session'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+  name: AutoDisconnect
+  data: 15
+  type: dword
+- id: 2.3.9.2
+  level: 1
+  title: 'Microsoft network server: Digitally sign communications (always)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+  name: RequireSecuritySignature
+  data: 1
+  type: dword
+- id: 2.3.9.3
+  level: 1
+  title: 'Microsoft network server: Disconnect clients when logon hours expire'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+  name: EnableForcedLogoff
+  data: 1
+  type: dword
+- id: 2.3.9.4
+  level: 1
+  title: 'Microsoft network server: Server SPN target name validation level (MS only)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+  name: SmbServerNameHardeningLevel
+  data: 1
+  type: dword
+- id: 2.3.10.2
+  level: 1
+  title: 'Network access: Do not allow anonymous enumeration of SAM accounts (MS only)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: RestrictAnonymousSAM
+  data: 1
+  type: dword
+- id: 2.3.10.3
+  level: 1
+  title: 'Network access: Do not allow anonymous enumeration of SAM accounts and shares (MS only)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: RestrictAnonymous
+  data: 1
+  type: dword
+- id: 2.3.10.4
+  level: 2
+  title: 'Network access: Do not allow storage of passwords and credentials for network authentication'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: DisableDomainCreds
+  data: 1
+  type: dword
+- id: 2.3.10.5
+  level: 1
+  title: 'Network access: Let Everyone permissions apply to anonymous users'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: EveryoneIncludesAnonymous
+  data: 0
+  type: dword
+- id: 2.3.10.7
+  level: 1
+  title: 'Network access: Named Pipes that can be accessed anonymously (MS only)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+  name: NullSessionPipes
+  data: []
+  type: multistring
+- id: 2.3.10.8
+  level: 1
+  title: 'Network access: Remotely accessible registry paths'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths
+  name: Machine
+  data:
+  - System\CurrentControlSet\Control\ProductOptions
+  - System\CurrentControlSet\Control\Server Applications
+  - Software\Microsoft\Windows NT\CurrentVersion
+  type: multistring
+- id: 2.3.10.9
+  level: 1
+  title: 'Network access: Remotely accessible registry paths and sub-paths'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths
+  name: Machine
+  data:
+  - System\CurrentControlSet\Control\Print\Printers
+  - System\CurrentControlSet\Services\Eventlog
+  - Software\Microsoft\OLAP Server
+  - Software\Microsoft\Windows NT\CurrentVersion\Print
+  - Software\Microsoft\Windows NT\CurrentVersion\Windows
+  - System\CurrentControlSet\Control\ContentIndex
+  - System\CurrentControlSet\Control\Terminal Server
+  - System\CurrentControlSet\Control\Terminal Server\UserConfig
+  - System\CurrentControlSet\Control\Terminal Server\DefaultUserConfiguration
+  - Software\Microsoft\Windows NT\CurrentVersion\Perflib
+  - System\CurrentControlSet\Services\SysmonLog
+  type: multistring
+- id: 2.3.10.10
+  level: 1
+  title: 'Network access: Restrict anonymous access to Named Pipes and Shares'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+  name: RestrictNullSessAccess
+  data: 1
+  type: dword
+- id: 2.3.10.11
+  level: 1
+  title: 'Network access: Restrict clients allowed to make remote calls to SAM (MS only)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: RestrictRemoteSAM
+  data: O:BAG:BAD:(A;;RC;;;BA)
+  type: string
+- id: 2.3.10.12
+  level: 1
+  title: 'Network access: Shares that can be accessed anonymously'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
+  name: NullSessionShares
+  data: []
+  type: multistring
+- id: 2.3.10.13
+  level: 1
+  title: 'Network access: Sharing and security model for local accounts'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: ForceGuest
+  data: 0
+  type: dword
+- id: 2.3.11.1
+  level: 1
+  title: 'Network security: Allow Local System to use computer identity for NTLM'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: UseMachineId
+  data: 1
+  type: dword
+- id: 2.3.11.2
+  level: 1
+  title: 'Network security: Allow LocalSystem NULL session fallback'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0
+  name: allownullsessionfallback
+  data: 0
+  type: dword
+- id: 2.3.11.3
+  level: 1
+  title: 'Network Security: Allow PKU2U authentication requests to this computer to use online identities'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\pku2u
+  name: AllowOnlineID
+  data: 0
+  type: dword
+- id: 2.3.11.4
+  level: 1
+  title: 'Network security: Configure encryption types allowed for Kerberos'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters
+  name: SupportedEncryptionTypes
+  data: 2147483672
+  type: dword
+- id: 2.3.11.6
+  level: 1
+  title: 'Network security: LAN Manager authentication level'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
+  name: LmCompatibilityLevel
+  data: 5
+  type: dword
+- id: 2.3.11.7
+  level: 1
+  title: 'Network security: LDAP client encryption requirements'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LDAP
+  name: LDAPClientIntegrity
+  data: 2
+  type: dword
+- id: 2.3.11.8
+  level: 1
+  title: 'Network security: LDAP client signing requirements'
+  path: HKLM:\SYSTEM\CurrentControlSet\Services\LDAP
+  name: LDAPClientIntegrity
+  data: 2
+  type: dword
+- id: 2.3.11.9
+  level: 1
+  title: 'Network security: Minimum session security for NTLM SSP based (including secure RPC) clients'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0
+  name: NTLMMinClientSec
+  data: 537395200
+  type: dword
+- id: 2.3.11.10
+  level: 1
+  title: 'Network security: Minimum session security for NTLM SSP based (including secure RPC) servers'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0
+  name: NTLMMinServerSec
+  data: 537395200
+  type: dword
+- id: 2.3.11.11
+  level: 1
+  title: 'Network security: Restrict NTLM: Audit Incoming NTLM Traffic'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0
+  name: AuditReceivingNTLMTraffic
+  data: 2
+  type: dword
+- id: 2.3.11.13
+  level: 1
+  title: 'Network security: Restrict NTLM: Outgoing NTLM traffic to remote servers'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0
+  name: RestrictSendingNTLMTraffic
+  data: 1
+  type: dword
+- id: 2.3.13.1
+  level: 1
+  title: 'Shutdown: Allow system to be shut down without having to log on'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: ShutdownWithoutLogon
+  data: 0
+  type: dword
+- id: 2.3.15.1
+  level: 1
+  title: 'System objects: Require case insensitivity for non-Windows subsystems'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Kernel
+  name: ObCaseInsensitive
+  data: 1
+  type: dword
+- id: 2.3.15.2
+  level: 1
+  title: 'System objects: Strengthen default permissions of internal system objects (e.g. Symbolic Links)'
+  path: HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager
+  name: ProtectionMode
+  data: 1
+  type: dword
+- id: 2.3.17.1
+  level: 1
+  title: 'User Account Control: Admin Approval Mode for the Built-in Administrator account'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: FilterAdministratorToken
+  data: 1
+  type: dword
+- id: 2.3.17.2
+  level: 1
+  title: 'User Account Control: Behavior of the elevation prompt for administrators in Admin Approval Mode'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: ConsentPromptBehaviorAdmin
+  data: 2
+  type: dword
+- id: 2.3.17.3
+  level: 1
+  title: 'User Account Control: Behavior of the elevation prompt for standard users'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: ConsentPromptBehaviorUser
+  data: 0
+  type: dword
+- id: 2.3.17.4
+  level: 1
+  title: 'User Account Control: Detect application installations and prompt for elevation'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: EnableInstallerDetection
+  data: 1
+  type: dword
+- id: 2.3.17.5
+  level: 1
+  title: 'User Account Control: Only elevate UIAccess applications that are installed in secure locations'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: EnableSecureUIAPaths
+  data: 1
+  type: dword
+- id: 2.3.17.6
+  level: 1
+  title: 'User Account Control: Run all administrators in Admin Approval Mode'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: EnableLUA
+  data: 1
+  type: dword
+- id: 2.3.17.7
+  level: 1
+  title: 'User Account Control: Switch to the secure desktop when prompting for elevation'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: PromptOnSecureDesktop
+  data: 1
+  type: dword
+- id: 2.3.17.8
+  level: 1
+  title: 'User Account Control: Virtualize file and registry write failures to per-user locations'
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+  name: EnableVirtualization
+  data: 1
+  type: dword

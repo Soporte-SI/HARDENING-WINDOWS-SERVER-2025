@@ -1,0 +1,6 @@
+---
+- name: Apply CIS Microsoft Windows Server 2025 Benchmark hardening (Member Server)
+  hosts: windows
+  gather_facts: true
+  roles:
+    - win2025_cis_hardening

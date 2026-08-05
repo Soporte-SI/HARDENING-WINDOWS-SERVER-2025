@@ -1,0 +1,85 @@
+---
+# Section 19 - Administrative Templates (User) (CIS Microsoft Windows Server 2025 Benchmark v2.1.0)
+# All items implemented via ansible.windows.win_regedit against the registry
+# locations documented in each control's "Audit" section of the CIS PDF
+# (Group Policy Administrative Templates settings are enforced through the
+# registry values their ADMX/ADML templates map to).
+# Source of truth: outputs/win2025_controls_extracted.json + outputs/win2025_cis.txt
+# (Audit section) - see outputs/gen/parse_1819_registry.py for the extraction
+# and manual line-wrap corrections applied.
+# DC-only controls and a handful of controls whose CIS-recommended value is
+# genuinely one-of-several / environment-specific (e.g. "0 or 2") are NOT
+# included here - see docs/coverage_matrix.csv for their disposition.
+# 19.x registry values apply per-user, under HKU\[USER SID]\... in the CIS
+# text. Without a domain GPO there is no single "all users" registry target,
+# so this role applies them under HKU:\.DEFAULT (the Default user profile
+# hive), which seeds every NEW interactive logon on the server. This does NOT
+# retroactively change already-existing/loaded user profiles - for a domain
+# environment, prefer delivering section 19 via a real User Configuration GPO.
+win2025cis_section19_registry_dword_items:
+- id: 19.5.1.1
+  level: 1
+  title: Ensure 'Turn off toast notifications on the lock screen' is set to 'Enabled'
+  path: HKU:\.DEFAULT\Software\Policies\Microsoft\Windows\CurrentVersion\PushNotifications
+  name: NoToastApplicationNotificationOnLockScreen
+  data: 1
+- id: 19.6.6.1.1
+  level: 2
+  title: Ensure 'Turn off Help Experience Improvement Program' is set to 'Enabled'
+  path: HKU:\.DEFAULT\Software\Policies\Microsoft\Assistance\Client\1.0
+  name: NoImplicitFeedback
+  data: 1
+- id: 19.7.5.1
+  level: 1
+  title: Ensure 'Do not preserve zone information in file attachments' is set to 'Disabled'
+  path: HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
+  name: SaveZoneInformation
+  data: 2
+- id: 19.7.5.2
+  level: 1
+  title: Ensure 'Notify antivirus programs when opening attachments' is set to 'Enabled'
+  path: HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments
+  name: ScanWithAntiVirus
+  data: 3
+- id: 19.7.8.1
+  level: 1
+  title: Ensure 'Configure Windows spotlight on lock screen' is set to 'Disabled'
+  path: HKU:\.DEFAULT\Software\Policies\Microsoft\Windows\CloudContent
+  name: ConfigureWindowsSpotlight
+  data: 2
+- id: 19.7.8.2
+  level: 1
+  title: Ensure 'Do not suggest third-party content in Windows spotlight' is set to 'Enabled'
+  path: HKU:\.DEFAULT\Software\Policies\Microsoft\Windows\CloudContent
+  name: DisableThirdPartySuggestions
+  data: 1
+- id: 19.7.8.3
+  level: 2
+  title: Ensure 'Do not use diagnostic data for tailored experiences' is set to 'Enabled'
+  path: HKU:\.DEFAULT\Software\Policies\Microsoft\Windows\CloudContent
+  name: DisableTailoredExperiencesWithDiagnosticData
+  data: 1
+- id: 19.7.8.4
+  level: 2
+  title: Ensure 'Turn off all Windows spotlight features' is set to 'Enabled'
+  path: HKU:\.DEFAULT\Software\Policies\Microsoft\Windows\CloudContent
+  name: DisableWindowsSpotlightFeatures
+  data: 1
+- id: 19.7.8.5
+  level: 1
+  title: Ensure 'Turn off Spotlight collection on Desktop' is set to 'Enabled'
+  path: HKU:\.DEFAULT\SOFTWARE\Policies\Microsoft\Windows\CloudContent
+  name: DisableSpotlightCollectionOnDesktop
+  data: 1
+- id: 19.7.26.1
+  level: 1
+  title: Ensure 'Prevent users from sharing files within their profile.' is set to 'Enabled'
+  path: HKU:\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer
+  name: NoInplaceSharing
+  data: 1
+- id: 19.7.46.2.1
+  level: 2
+  title: Ensure 'Prevent Codec Download' is set to 'Enabled'
+  path: HKU:\.DEFAULT\Software\Policies\Microsoft\WindowsMediaPlayer
+  name: PreventCodecDownload
+  data: 1
