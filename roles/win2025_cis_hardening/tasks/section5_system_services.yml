@@ -12,5 +12,5 @@
     label: "{{ item.id }} - {{ item.title }}"
   when: >-
     win2025cis_level >= item.level and
-    (vars['win2025cis_rule_' + (item.id | regex_replace('\.', '_'))] | default(true))
-  tags: "{{ win2025cis_section5_service_items | map(attribute='id') | list }}"
+    (lookup('vars', 'win2025cis_rule_' + (item.id | regex_replace('\.', '_')), default=true))
+  tags: ["section5", "system_services", "5.2"]

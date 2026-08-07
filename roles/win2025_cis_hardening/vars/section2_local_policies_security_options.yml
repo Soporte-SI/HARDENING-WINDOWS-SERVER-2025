@@ -249,9 +249,11 @@ win2025cis_section2_secedit_items:
   title: 'Network access: Allow anonymous SID/Name translation'
   key: LSAAnonymousNameLookup
   value: '0'
-# 2.3.11.5 (Network security: Force logoff when logon hours expire) is
-# CIS-rated "Manual" (audit requires manual verification) - intentionally NOT
-# automated here, see docs/coverage_matrix.csv.
+- id: 2.3.11.5
+  level: 1
+  title: "Network security: Force logoff when logon hours expire"
+  key: ForceLogoffWhenHourExpire
+  value: '1'
 win2025cis_section2_rename_items:
 - id: 2.3.1.3
   level: 1
