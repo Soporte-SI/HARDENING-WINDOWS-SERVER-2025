@@ -26,11 +26,15 @@
     win2025cis_level >= item.level and
     (lookup('vars', 'win2025cis_rule_' + (item.id | regex_replace('\.', '_')), default=true))
   tags: ["section2", "local_policies", "security_options", "2.3.1.1", "2.3.10.1", "2.3.11.5"]
+# 2.3.1.3/2.3.1.4 (rename Administrator/Guest accounts) is safe to run here,
+# in its natural place, because tasks/main.yml has a PREFLIGHT assertion that
+# refuses to run this role at all if ansible_user is Administrator/Guest -
+# so the account being renamed is never the one Ansible is authenticated as.
 - name: "CIS 2.3.1.3/2.3.1.4 - Rename Administrator/Guest accounts (org-specific, see group_vars)"
   community.windows.win_security_policy:
     section: System Access
     key: "{{ item.key }}"
-    value: "{{ vars[item.value_var] }}"
+    value: "{{ lookup('vars', item.value_var) }}"
   loop: "{{ win2025cis_section2_rename_items }}"
   loop_control:
     label: "{{ item.id }} - {{ item.title }}"
@@ -42,7 +46,7 @@
   ansible.windows.win_regedit:
     path: "{{ item.path }}"
     name: "{{ item.name }}"
-    data: "{{ vars[item.data_var] if item.data_var is defined else item.data }}"
+    data: "{{ (lookup('vars', item.data_var)) if item.data_var is defined else item.data }}"
     type: "{{ item.type }}"
   loop: "{{ win2025cis_section2_registry_items }}"
   loop_control:

@@ -25,32 +25,34 @@ the highest-priority sections (account policy, local security options,
 firewall, audit policy, administrative templates), not the entire benchmark.
 Extending it to the remaining sections is future work.
 
-Within the 428 controls that were extracted:
+Within the 430 controls tracked in `docs/coverage_matrix.csv`:
 
 | | Count |
 |---|---|
-| Total controls extracted (sections 1,2,5,9,17,18,19) | 428 |
-| Applicable to Member Server (Level 1 + 2) | 390 |
-| **Implemented** (automated by this role) | **380** |
-| Manual / not automated (see below) | 10 |
-| Not applicable (Domain Controller only) | 38 |
+| Total controls tracked (sections 1,2,5,9,17,18,19) | 430 |
+| **Implemented** (matches Linea_Base_Hardening_CIS_WindowsServer2025_Final.xlsx, the bank's baseline, exactly) | **333** |
+| Excluded per bank baseline (`excluded_baseline_cliente` - code kept, toggle=false) | 55 |
+| Manual / not automated | 5 |
+| Not applicable (Domain Controller only) | 37 |
 
-Implemented, by level: 302 Level 1 + 78 Level 2 = 380.
-Implemented, by section: 1→10, 2→98, 5→1, 9→23, 17→27, 18→210, 19→11.
+**2026-08-07 update:** the bank provided its own compliance-scan baseline
+(`Linea_Base_Hardening_CIS_WindowsServer2025_Final.xlsx`). Every implemented
+control was cross-checked against it 1:1 - the 333 implemented controls above
+are exactly the 333 the bank's own reference scan applies. Controls that were
+previously automated but are not in the bank's baseline were disabled by
+default (not deleted) via their `win2025cis_rule_*` toggle in
+`defaults/main.yml`, and marked `excluded_baseline_cliente` with a note in
+`docs/coverage_matrix.csv`. `18.9.41.3` was also corrected: the original PDF
+extraction had mis-mapped that ID to a Domain-Controller-only control; the
+real 18.9.41.3 ("Configure SAM change password RPC methods policy") is now
+implemented per the bank's data.
 
-The 10 "manual" controls are:
-- 2 controls CIS itself rates **"Manual"** (audit requires human verification):
-  `1.2.3` (Allow Administrator account lockout) and `2.3.11.5` (Network
-  security: Force logoff when logon hours expire).
-- 8 **"Automated"** controls whose CIS-recommended value is genuinely
-  one-of-several / environment-specific (e.g. `0 or 2`, `3, 5 or 11`,
-  RPC authentication protocol, LAPS backup directory/complexity/post-auth
-  action) - automating these with a guessed value could silently apply the
-  wrong policy, so they are intentionally left for manual configuration.
-
-Every one of these 10, plus all 38 DC-only controls, is listed by exact CIS
-ID with a note in `docs/coverage_matrix.csv` explaining what the client
-should verify/configure manually.
+The 5 remaining "manual" controls are ones CIS itself, or the underlying
+setting, cannot be safely auto-remediated (e.g. `1.2.3` Allow Administrator
+account lockout, RPC/LAPS settings that are genuinely environment-specific).
+Every one of these, plus all 37 DC-only controls, is listed by exact CIS ID
+with a note in `docs/coverage_matrix.csv` explaining what the client should
+verify/configure manually.
 
 ## Requirements
 
@@ -62,8 +64,30 @@ should verify/configure manually.
   ansible-galaxy collection install -r requirements.yml
   ```
 - Target hosts: Windows Server 2025, WinRM listener over **HTTPS (5986)**,
-  reachable with an account in the local `Administrators` group (or a domain
-  account with local admin rights).
+  reachable with a **dedicated local service account** in the `Administrators`
+  group (or a domain account with local admin rights) - see "Cuenta de
+  servicio obligatoria" below. **Never `Administrator` or `Guest`.**
+
+## Cuenta de servicio obligatoria (no usar Administrator/Guest)
+
+Este rol tiene una tarea `PREFLIGHT` al inicio de `tasks/main.yml` que
+**falla inmediatamente** si `ansible_user` es `administrator` o `guest`
+(sin importar mayusculas/minusculas). No es opcional: varios controles
+(2.3.1.3/2.3.1.4) renombran esas mismas cuentas locales, y si Ansible se
+autentica con la cuenta que se esta renombrando, la sesion WinRM queda
+invalida a mitad de la corrida.
+
+Antes de correr el playbook, crea una cuenta de servicio dedicada en el
+host de destino:
+
+```powershell
+$Password = Read-Host -AsSecureString "Password para la cuenta de automatizacion"
+New-LocalUser -Name "ansible" -Password $Password -FullName "Ansible Automation" -Description "Cuenta de servicio para Ansible/WinRM" -PasswordNeverExpires -AccountNeverExpires
+Add-LocalGroupMember -Group "Administrators" -Member "ansible"
+```
+
+(El password debe cumplir la politica de complejidad ya aplicada por este
+mismo playbook: 14+ caracteres, mayusculas, minusculas, numeros y simbolos.)
 
 ## Inventory / WinRM configuration
 
@@ -78,7 +102,7 @@ ansible_connection=winrm
 ansible_port=5986
 ansible_winrm_transport=credssp   ; or ntlm
 ansible_winrm_server_cert_validation=ignore  ; lab only - use "validate" with a real cert in production
-ansible_user=Administrator
+ansible_user=ansible
 ansible_password="{{ vault_windows_admin_password }}"
 ```
 
@@ -116,6 +140,47 @@ ansible-playbook -i inventory/hosts.ini site.yml --skip-tags section18,section19
 # you need to skip/keep exactly one control)
 ansible-playbook -i inventory/hosts.ini site.yml --tags 18.1.1.1
 ```
+
+## Advertencias operativas
+
+**Renombrado de cuenta Administrator/Guest (2.3.1.3 / 2.3.1.4).** Ya no
+requiere ningun truco de orden: la tarea `PREFLIGHT` descrita arriba impide
+que el rol corra si te conectas como `Administrator`/`Guest`, asi que
+renombrar esas cuentas nunca afecta a la sesion de Ansible. Estas dos tareas
+viven en su lugar natural dentro de `section2_local_policies_security_options.yml`.
+
+**CIS 18.10.90.2.2 (WinRM Service `AllowAutoConfig` -> Disabled) SI debe ser
+el ultimo control que se aplica, sin excepcion - y esto NO se soluciona con
+una cuenta de servicio.** Vive en su propio archivo
+(`roles/win2025_cis_hardening/tasks/final_winrm_autoconfig.yml`), incluido
+como la ULTIMA tarea de todo el rol (despues incluso de la Seccion 19). Este
+control reconfigura el propio servicio WinRM que sostiene el listener por el
+que Ansible esta conectado - si ese listener depende de auto-configuracion
+por GPO, aplicarlo puede tumbar la sesion activa en el momento, sin importar
+que cuenta se use. Si ves `unreachable`/`ntlm: the specified credentials
+were rejected by the server` justo en esta tarea (y solo en esta), es
+esperado - todo lo demas ya se aplico antes. Recomendaciones:
+
+- Corre este control por separado, al final de tu ventana de mantenimiento:
+  `ansible-playbook -i inventory/hosts.ini site.yml --tags 18.10.90.2.2`
+- Verifica que el listener WinRM del host no dependa de auto-config de GPO
+  antes de aplicarlo en produccion.
+- Si prefieres posponerlo, deshabilita el toggle
+  (`win2025cis_rule_18_10_90_2_2: false` en `group_vars`/`host_vars`).
+
+**Seccion 9 (Firewall): "Inbound connections: Block (default)" (9.1.2/9.2.2/9.3.2)
+puede dejarte sin acceso remoto si no hay una regla explicita de admin en los
+3 perfiles.** La regla incorporada de Windows para WinRM suele estar limitada
+a los perfiles Domain/Private, no Public - si la interfaz de red del host
+esta clasificada como Public (comun en VMs sin dominio), aplicar el bloqueo
+por defecto corta WinRM/RDP de inmediato, sin login fallido ni evento en el
+Visor de Eventos (el timeout ocurre a nivel de conexion TCP, no de
+autenticacion). Por eso `tasks/section9_firewall.yml` tiene una tarea
+"SAFETY NET" que crea una regla de firewall (`Ansible-Managed-Remote-Access`,
+puertos 5985/5986/3389, los 3 perfiles) ANTES de aplicar el bloqueo por
+defecto. Si aun asi pierdes acceso, la recuperacion es por consola
+fuera de banda (hipervisor/nube), no por red - ver notas de troubleshooting
+del equipo.
 
 ### Exclude individual controls
 

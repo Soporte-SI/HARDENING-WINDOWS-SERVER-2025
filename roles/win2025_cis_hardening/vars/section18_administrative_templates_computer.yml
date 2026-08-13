@@ -10,6 +10,10 @@
 # DC-only controls and a handful of controls whose CIS-recommended value is
 # genuinely one-of-several / environment-specific (e.g. "0 or 2") are NOT
 # included here - see docs/coverage_matrix.csv for their disposition.
+# NOTE: 18.10.90.2.2 (WinRM Service AllowAutoConfig) is deliberately excluded from
+# this list - it reconfigures the WinRM service itself and can drop the active
+# session Ansible is connected through. It is implemented separately in
+# tasks/final_winrm_autoconfig.yml, included as the LAST task of the whole role.
 win2025cis_section18_registry_dword_items:
 - id: 18.1.1.1
   level: 1
@@ -1209,12 +1213,6 @@ win2025cis_section18_registry_dword_items:
   title: Ensure 'Allow Basic authentication' is set to 'Disabled'
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
   name: AllowBasic
-  data: 0
-- id: 18.10.90.2.2
-  level: 2
-  title: Ensure 'Allow remote server management through WinRM' is set to 'Disabled'
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
-  name: AllowAutoConfig
   data: 0
 - id: 18.10.90.2.3
   level: 1

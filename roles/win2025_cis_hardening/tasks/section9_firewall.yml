@@ -2,11 +2,30 @@
 # Section 9 - Windows Defender Firewall with Advanced Security
 # Exception toggle for control X.Y.Z: win2025cis_rule_X_Y_Z (see defaults/main.yml)
 
+# SAFETY NET - DEBE correr ANTES que 9.1.2/9.2.2/9.3.2 (Inbound connections:
+# Block (default) en los 3 perfiles). Sin una regla explicita que permita
+# WinRM/RDP en TODOS los perfiles (Domain, Private, Public), aplicar el
+# bloqueo por defecto puede dejar el host inalcanzable por red - la regla
+# incorporada de Windows para WinRM suele estar limitada a Domain/Private, no
+# Public, y si la interfaz de red del host esta clasificada como Public (muy
+# comun en VMs sin dominio), el bloqueo corta WinRM/RDP de inmediato.
+- name: "SAFETY NET - Asegurar acceso remoto (WinRM/RDP) en los 3 perfiles antes de aplicar bloqueo por defecto"
+  community.windows.win_firewall_rule:
+    name: "Ansible-Managed-Remote-Access"
+    localport: "5985,5986,3389"
+    protocol: tcp
+    direction: in
+    action: allow
+    profiles: domain,private,public
+    enabled: true
+    state: present
+  tags: ["section9", "firewall", "always"]
+
 - name: "CIS 9.x - Configure Windows Defender Firewall profile properties"
   ansible.windows.win_regedit:
     path: "{{ item.path }}"
     name: "{{ item.name }}"
-    data: "{{ vars[item.data_var] if item.data_var is defined else item.data }}"
+    data: "{{ (lookup('vars', item.data_var)) if item.data_var is defined else item.data }}"
     type: "{{ item.type }}"
   loop: "{{ win2025cis_section9_firewall_items }}"
   loop_control:
