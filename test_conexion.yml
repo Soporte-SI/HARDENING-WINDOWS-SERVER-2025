@@ -1,0 +1,42 @@
+---
+# Playbook: test_winrm_connectivity.yml
+# Prueba de conectividad WinRM contra todos los hosts del grupo
+# "windows" del inventario, usando ansible.windows.win_ping.
+# No aplica ningun cambio (es solo diagnostico).
+#
+# Uso CLI:
+#   ansible-playbook playbooks/test_winrm_connectivity.yml \
+#     -i inventories/production/hosts.yml
+#
+# Ad-hoc equivalente (sin playbook):
+#   ansible windows -i inventories/production/hosts.yml -m ansible.windows.win_ping
+#
+# En AWX/AAP: se puede usar como Job Template independiente de
+# "verificacion" antes de correr el parchado real.
+
+- name: Prueba de conectividad WinRM (win_ping)
+  hosts: all
+  gather_facts: false
+  ignore_unreachable: true
+
+  tasks:
+    - name: win_ping | Probar conectividad WinRM
+      ansible.windows.win_ping:
+      register: winrm_ping_result
+      ignore_unreachable: true
+      ignore_errors: true
+
+    - name: win_ping | Mostrar resultado por host
+      ansible.builtin.debug:
+        msg: >-
+          {{ inventory_hostname }} ->
+          {{ 'OK' if (winrm_ping_result.ping | default('') == 'pong') else 'FALLO / INALCANZABLE' }}
+
+- name: Resumen de conectividad WinRM
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  tasks:
+    - name: Resumen | Hosts Windows probados
+      ansible.builtin.debug:
+        msg: "Prueba de win_ping finalizada. Revisa el detalle por host arriba (OK / FALLO / INALCANZABLE)."
