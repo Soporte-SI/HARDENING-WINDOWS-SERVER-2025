@@ -35,11 +35,17 @@ win2025cis_section1_secedit_items:
   title: Store passwords using reversible encryption
   key: ClearTextPassword
   value: '0'
-- id: 1.2.1
-  level: 1
-  title: Account lockout duration
-  key: LockoutDuration
-  value: '15'
+# RESUELTO 2026-09-21: orden corregido - Windows exige que "Account lockout
+# duration" (1.2.1) sea >= "Reset account lockout counter after" (1.2.4).
+# Con el orden original (1.2.1 antes que 1.2.4), secedit intentaba fijar
+# LockoutDuration=15 mientras el ResetLockoutCount vigente todavía era el
+# valor anterior/por defecto de Windows (mayor a 15 minutos), violando esa
+# regla y fallando con "The parameter is incorrect" (job 281, host
+# 10.110.9.187 - ver import_log completo en el job). 1.2.2 y 1.2.4 sí se
+# aplicaron bien justo después, dejando el server en un estado inconsistente
+# (duration vieja, reset counter ya en 15). Fix: aplicar primero threshold y
+# reset counter, y AL FINAL duration - así, cuando se fija duration, el
+# reset counter objetivo ya está vigente y la regla se cumple.
 - id: 1.2.2
   level: 1
   title: Account lockout threshold
@@ -52,6 +58,11 @@ win2025cis_section1_secedit_items:
   level: 1
   title: Reset account lockout counter after
   key: ResetLockoutCount
+  value: '15'
+- id: 1.2.1
+  level: 1
+  title: Account lockout duration
+  key: LockoutDuration
   value: '15'
 win2025cis_section1_registry_items:
 - id: 1.1.6
