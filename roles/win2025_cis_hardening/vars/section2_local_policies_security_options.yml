@@ -165,7 +165,8 @@ win2025cis_section2_user_rights:
   name: SeIncreaseBasePriorityPrivilege
   users:
   - Administrators
-  - Window Manager\Window Manager Group
+  - "S-1-5-90-0"                              # SID de Window Manager\Window Manager Group
+  #- Window Manager\Window Manager Group     # original: fallaba al traducir el nombre a SID en 10.110.9.187
 - id: 2.2.34
   level: 1
   title: Load and unload device drivers
