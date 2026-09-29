@@ -26,3 +26,9 @@
     and item.id not in win2025cis_pendientes_activos
   tags: ["section19", "administrative_templates_user", "19.5.1.1", "19.6.6.1.1", "19.7.5.1", "19.7.5.2", "19.7.8.1", "19.7.8.2", "19.7.8.3", "19.7.8.4", "19.7.8.5", "19.7.26.1", "19.7.46.2.1"]
   notify: Run gpupdate
+
+- name: "OBSERVACIONES | Seccion 19 - controles aplicados que quedan anotados para revision"
+  ansible.builtin.debug:
+    msg: "OBSERVACION {{ item }} | {{ win2025cis_observaciones_detalle[item] }}"
+  loop: "{{ win2025cis_observaciones_detalle.keys() | list | select('match', '^19\\.') | list }}"
+  tags: ["section19", "observaciones"]

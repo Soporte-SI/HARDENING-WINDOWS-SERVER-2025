@@ -57,3 +57,9 @@
     and item.id not in win2025cis_pendientes_activos
   tags: ["section18", "administrative_templates_computer", "18.9.19.5"]
   notify: Run gpupdate
+
+- name: "OBSERVACIONES | Seccion 18 - controles aplicados que quedan anotados para revision"
+  ansible.builtin.debug:
+    msg: "OBSERVACION {{ item }} | {{ win2025cis_observaciones_detalle[item] }}"
+  loop: "{{ win2025cis_observaciones_detalle.keys() | list | select('match', '^18\\.') | list }}"
+  tags: ["section18", "observaciones"]

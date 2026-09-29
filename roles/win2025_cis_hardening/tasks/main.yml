@@ -38,10 +38,12 @@
   ansible.builtin.include_tasks: section19_administrative_templates_user.yml
   tags: [section19, administrative_templates_user]
 
-- name: "PENDIENTES | Resumen final - controles CIS contemplados que NO se aplicaron (a retomar)"
+- name: "PENDIENTES Y OBSERVACIONES | Resumen final - controles a retomar"
   ansible.builtin.debug:
     msg:
       total_pendientes: "{{ win2025cis_pendientes_activos | length }}"
       pendientes: "{{ win2025cis_pendientes_activos }}"
       aplicados_bajo_demanda: "{{ win2025cis_aplicar_pendientes | intersect(win2025cis_pendientes_detalle.keys() | list) }}"
+      total_observaciones: "{{ win2025cis_observaciones_detalle | length }}"
+      observaciones_aplicadas_a_revisar: "{{ win2025cis_observaciones_detalle.keys() | list }}"
   tags: always

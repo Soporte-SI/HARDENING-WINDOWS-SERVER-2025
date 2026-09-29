@@ -35,3 +35,9 @@
     (lookup('vars', 'win2025cis_rule_' + (item.id | regex_replace('\.', '_')), default=true))
     and item.id not in win2025cis_pendientes_activos
   tags: ["section1", "account_policies", "1.1.6"]
+
+- name: "OBSERVACIONES | Seccion 1 - controles aplicados que quedan anotados para revision"
+  ansible.builtin.debug:
+    msg: "OBSERVACION {{ item }} | {{ win2025cis_observaciones_detalle[item] }}"
+  loop: "{{ win2025cis_observaciones_detalle.keys() | list | select('match', '^1\\.') | list }}"
+  tags: ["section1", "observaciones"]
