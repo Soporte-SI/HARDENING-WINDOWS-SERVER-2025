@@ -33,6 +33,9 @@ win2025cis_firewall_public_log_path: '%SystemRoot%\System32\logfiles\firewall\pu
 #   usar win2025cis_controles_pendientes_extra en el inventario o host_vars.
 #   No redefinir win2025cis_controles_pendientes fuera de este archivo.
 # ---------------------------------------------------------------------------
+# COMO USARLO (tipo "hashtag"):
+#   - Linea ACTIVA      -> el control se OMITE (no se ejecuta) y se reporta como PENDIENTE.
+#   - Linea con # delante -> el control vuelve a ejecutarse normalmente.
 win2025cis_controles_pendientes:
   "18.10.90.2.2": "Allow remote server management through WinRM = Disabled -> WinRM deja de escuchar y Ansible pierde el acceso. Retomar via GPO de AD o excepcion documentada."
   "18.10.91.1": "Allow Remote Shell Access = Disabled -> deshabilita WinRS y Ansible no puede ejecutar modulos. Retomar via GPO de AD o excepcion documentada."
@@ -45,8 +48,8 @@ win2025cis_controles_pendientes_extra: {}
 win2025cis_aplicar_pendientes: []
 
 # Calculados - no modificar.
-win2025cis_pendientes_detalle: "{{ win2025cis_controles_pendientes | combine(win2025cis_controles_pendientes_extra) }}"
-win2025cis_pendientes_activos: "{{ win2025cis_pendientes_detalle.keys() | list | difference(win2025cis_aplicar_pendientes) }}"
+win2025cis_pendientes_detalle: "{{ (win2025cis_controles_pendientes | default({}, true)) | combine(win2025cis_controles_pendientes_extra | default({}, true)) }}"
+win2025cis_pendientes_activos: "{{ win2025cis_pendientes_detalle.keys() | list | difference(win2025cis_aplicar_pendientes | default([], true)) }}"
 
 # ---------------------------------------------------------------------------
 # CONTROLES CIS CON "OBSERVACION"
@@ -79,7 +82,7 @@ win2025cis_controles_observaciones:
 win2025cis_controles_observaciones_extra: {}
 
 # Calculado - no modificar.
-win2025cis_observaciones_detalle: "{{ win2025cis_controles_observaciones | combine(win2025cis_controles_observaciones_extra) }}"
+win2025cis_observaciones_detalle: "{{ (win2025cis_controles_observaciones | default({}, true)) | combine(win2025cis_controles_observaciones_extra | default({}, true)) }}"
 
 # ---------------------------------------------------------------------------
 # Per-control exception toggles - one boolean per IMPLEMENTED CIS control.

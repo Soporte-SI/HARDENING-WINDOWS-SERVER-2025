@@ -289,6 +289,9 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\Network Connections
   name: NC_StdDomainUserSetLocation
   data: 1
+# >>> PENDIENTE - este control esta CONTEMPLADO pero se OMITE por ahora: requiere reinicio y validar servicios que usan IPv6.
+# >>> Se salta porque su id esta en win2025cis_controles_pendientes (defaults/main.yml).
+# >>> Para aplicarlo: comentar con # su linea en esa lista, o usar win2025cis_aplicar_pendientes.
 - id: 18.6.19.2.1
   level: 2
   title: Disable IPv6 (Ensure TCPIP6 Parameter 'DisabledComponents' is set to '0xff (255)')
@@ -1210,6 +1213,9 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
   name: AllowBasic
   data: 0
+# >>> PENDIENTE - este control esta CONTEMPLADO pero se OMITE por ahora: deshabilitaria WinRM y Ansible perderia la sesion.
+# >>> Se salta porque su id esta en win2025cis_controles_pendientes (defaults/main.yml).
+# >>> Para aplicarlo: comentar con # su linea en esa lista, o usar win2025cis_aplicar_pendientes.
 - id: 18.10.90.2.2
   level: 2
   title: Ensure 'Allow remote server management through WinRM' is set to 'Disabled'
@@ -1228,6 +1234,9 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
   name: DisableRunAs
   data: 1
+# >>> PENDIENTE - este control esta CONTEMPLADO pero se OMITE por ahora: deshabilitaria WinRS y Ansible no podria ejecutar modulos.
+# >>> Se salta porque su id esta en win2025cis_controles_pendientes (defaults/main.yml).
+# >>> Para aplicarlo: comentar con # su linea en esa lista, o usar win2025cis_aplicar_pendientes.
 - id: 18.10.91.1
   level: 2
   title: Ensure 'Allow Remote Shell Access' is set to 'Disabled'
