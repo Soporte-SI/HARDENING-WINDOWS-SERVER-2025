@@ -37,3 +37,11 @@
 - name: Include Section 19 - Administrative Templates (User) tasks
   ansible.builtin.include_tasks: section19_administrative_templates_user.yml
   tags: [section19, administrative_templates_user]
+
+- name: "PENDIENTES | Resumen final - controles CIS contemplados que NO se aplicaron (a retomar)"
+  ansible.builtin.debug:
+    msg:
+      total_pendientes: "{{ win2025cis_pendientes_activos | length }}"
+      pendientes: "{{ win2025cis_pendientes_activos }}"
+      aplicados_bajo_demanda: "{{ win2025cis_aplicar_pendientes | intersect(win2025cis_pendientes_detalle.keys() | list) }}"
+  tags: always

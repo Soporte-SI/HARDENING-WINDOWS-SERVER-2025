@@ -2,6 +2,12 @@
 # Section 5 - System Services
 # Exception toggle for control X.Y: win2025cis_rule_X_Y (see defaults/main.yml)
 
+- name: "PENDIENTES | Seccion 5 - controles contemplados que NO se aplican en esta ejecucion"
+  ansible.builtin.debug:
+    msg: "PENDIENTE {{ item }} | {{ win2025cis_pendientes_detalle[item] }}"
+  loop: "{{ win2025cis_pendientes_activos | select('match', '^5\\.') | list }}"
+  tags: ["section5", "pendientes"]
+
 - name: "CIS 5.x - Disable insecure system services"
   ansible.windows.win_service:
     name: "{{ item.name }}"
@@ -13,4 +19,5 @@
   when: >-
     win2025cis_level >= item.level and
     (lookup('vars', 'win2025cis_rule_' + (item.id | regex_replace('\.', '_')), default=true))
+    and item.id not in win2025cis_pendientes_activos
   tags: ["section5", "system_services", "5.2"]

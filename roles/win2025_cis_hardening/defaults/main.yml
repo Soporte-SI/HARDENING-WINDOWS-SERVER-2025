@@ -20,6 +20,35 @@ win2025cis_firewall_private_log_path: '%SystemRoot%\System32\logfiles\firewall\p
 win2025cis_firewall_public_log_path: '%SystemRoot%\System32\logfiles\firewall\publicfw.log'
 
 # ---------------------------------------------------------------------------
+# CONTROLES CIS "PENDIENTES"
+# Controles contemplados en el rol que NO se aplican por ahora, porque
+# cortarian la conexion de Ansible (WinRM) o requieren una validacion previa.
+# En cada ejecucion se reportan como "PENDIENTE <id> | motivo" al llegar a su
+# seccion, y de nuevo en un resumen al final del rol (evidencia para auditoria).
+#
+# - Para APLICAR uno bajo demanda, sin tocar este archivo, pasar su id en
+#   win2025cis_aplicar_pendientes. Ejemplo (CLI o Extra Variables de AWX):
+#     -e '{"win2025cis_aplicar_pendientes": ["18.6.19.2.1"]}'
+# - Para agregar pendientes SOLO en un ambiente (lab, un servidor puntual),
+#   usar win2025cis_controles_pendientes_extra en el inventario o host_vars.
+#   No redefinir win2025cis_controles_pendientes fuera de este archivo.
+# ---------------------------------------------------------------------------
+win2025cis_controles_pendientes:
+  "18.10.90.2.2": "Allow remote server management through WinRM = Disabled -> WinRM deja de escuchar y Ansible pierde el acceso. Retomar via GPO de AD o excepcion documentada."
+  "18.10.91.1": "Allow Remote Shell Access = Disabled -> deshabilita WinRS y Ansible no puede ejecutar modulos. Retomar via GPO de AD o excepcion documentada."
+  "18.6.19.2.1": "Disable IPv6 (DisabledComponents = 0xFF) -> requiere reinicio y validar servicios que dependan de IPv6 antes de aplicarlo."
+
+# Pendientes adicionales por ambiente (se suman a la lista anterior).
+win2025cis_controles_pendientes_extra: {}
+
+# Ids de pendientes que SI se quieren aplicar en esta ejecucion (bajo demanda).
+win2025cis_aplicar_pendientes: []
+
+# Calculados - no modificar.
+win2025cis_pendientes_detalle: "{{ win2025cis_controles_pendientes | combine(win2025cis_controles_pendientes_extra) }}"
+win2025cis_pendientes_activos: "{{ win2025cis_pendientes_detalle.keys() | list | difference(win2025cis_aplicar_pendientes) }}"
+
+# ---------------------------------------------------------------------------
 # Per-control exception toggles - one boolean per IMPLEMENTED CIS control.
 # Set any of these to `false` (e.g. in group_vars/host_vars) to skip that
 # specific control while still applying everything else at the chosen level.
@@ -398,7 +427,7 @@ win2025cis_rule_18_10_90_2_1: true  # 18.10.90.2.1 Ensure 'Allow Basic authentic
 win2025cis_rule_18_10_90_2_2: true  # 18.10.90.2.2 Ensure 'Allow remote server management through WinRM' is set to 'Disabled'
 win2025cis_rule_18_10_90_2_3: true  # 18.10.90.2.3 Ensure 'Allow unencrypted traffic' is set to 'Disabled'
 win2025cis_rule_18_10_90_2_4: true  # 18.10.90.2.4 Ensure 'Disallow WinRM from storing RunAs credentials' is set to 'Enabled'
-win2025cis_rule_18_10_91_1: false  # 18.10.91.1 Ensure 'Allow Remote Shell Access' is set to 'Disabled'
+win2025cis_rule_18_10_91_1: true  # (gobernado por win2025cis_controles_pendientes) 18.10.91.1 Ensure 'Allow Remote Shell Access' is set to 'Disabled'
 win2025cis_rule_18_10_93_2_1: true  # 18.10.93.2.1 Ensure 'Prevent users from modifying settings' is set to 'Enabled'
 win2025cis_rule_18_10_94_1_1: true  # 18.10.94.1.1 Ensure 'No auto-restart with logged on users for scheduled automatic updates installations' is se...
 win2025cis_rule_18_10_94_2_1: false  # 18.10.94.2.1 Ensure 'Configure Automatic Updates' is set to 'Enabled'

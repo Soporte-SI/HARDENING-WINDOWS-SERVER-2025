@@ -5,6 +5,12 @@
 # header note: this seeds NEW interactive logons, it does not retroactively
 # change already-existing/loaded profiles.
 
+- name: "PENDIENTES | Seccion 19 - controles contemplados que NO se aplican en esta ejecucion"
+  ansible.builtin.debug:
+    msg: "PENDIENTE {{ item }} | {{ win2025cis_pendientes_detalle[item] }}"
+  loop: "{{ win2025cis_pendientes_activos | select('match', '^19\\.') | list }}"
+  tags: ["section19", "pendientes"]
+
 - name: "CIS 19.x - Configure Administrative Templates (User) - REG_DWORD values"
   ansible.windows.win_regedit:
     path: "{{ item.path }}"
@@ -17,5 +23,6 @@
   when: >-
     win2025cis_level >= item.level and
     (lookup('vars', 'win2025cis_rule_' + (item.id | regex_replace('\.', '_')), default=true))
+    and item.id not in win2025cis_pendientes_activos
   tags: ["section19", "administrative_templates_user", "19.5.1.1", "19.6.6.1.1", "19.7.5.1", "19.7.5.2", "19.7.8.1", "19.7.8.2", "19.7.8.3", "19.7.8.4", "19.7.8.5", "19.7.26.1", "19.7.46.2.1"]
   notify: Run gpupdate

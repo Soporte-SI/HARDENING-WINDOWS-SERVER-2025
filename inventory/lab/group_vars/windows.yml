@@ -1,0 +1,18 @@
+---
+# Variables del LAB (temporal) - servidor SIN dominio, cuenta local para Ansible.
+# La contrasena NO va aqui: se pide al ejecutar con -k.
+
+# --- Conexion WinRM ---
+ansible_connection: winrm
+ansible_port: 5986
+ansible_winrm_scheme: https
+ansible_winrm_transport: ntlm
+ansible_winrm_server_cert_validation: ignore   # certificado autofirmado del lab
+ansible_user: ansible_lab                      # cuenta local (miembro de Administradores), NO "Administrator"
+
+# --- Pendientes adicionales SOLO para el lab ---
+# Se suman a los pendientes base del rol (18.10.90.2.2, 18.10.91.1, 18.6.19.2.1).
+win2025cis_controles_pendientes_extra:
+  "18.4.1": "LAB sin dominio: con cuenta local, las restricciones UAC remotas bloquearian a Ansible por WinRM."
+  "2.2.21": "LAB sin dominio: denegar acceso por red a cuentas locales administradoras bloquearia a ansible_lab."
+  "9.3.4": "LAB sin dominio: la red suele quedar en perfil Publico; ignorar reglas locales de firewall bloquearia el 5986."

@@ -2,6 +2,12 @@
 # Section 9 - Windows Defender Firewall with Advanced Security
 # Exception toggle for control X.Y.Z: win2025cis_rule_X_Y_Z (see defaults/main.yml)
 
+- name: "PENDIENTES | Seccion 9 - controles contemplados que NO se aplican en esta ejecucion"
+  ansible.builtin.debug:
+    msg: "PENDIENTE {{ item }} | {{ win2025cis_pendientes_detalle[item] }}"
+  loop: "{{ win2025cis_pendientes_activos | select('match', '^9\\.') | list }}"
+  tags: ["section9", "pendientes"]
+
 - name: "CIS 9.x - Configure Windows Defender Firewall profile properties"
   ansible.windows.win_regedit:
     path: "{{ item.path }}"
@@ -14,4 +20,5 @@
   when: >-
     win2025cis_level >= item.level and
     (lookup('vars', 'win2025cis_rule_' + (item.id | regex_replace('\.', '_')), default=true))
+    and item.id not in win2025cis_pendientes_activos
   tags: ["section9", "firewall", "9.1.1", "9.1.2", "9.1.3", "9.1.4", "9.1.5", "9.1.6", "9.1.7", "9.2.1", "9.2.2", "9.2.3", "9.2.4", "9.2.5", "9.2.6", "9.2.7", "9.3.1", "9.3.2", "9.3.3", "9.3.4", "9.3.5", "9.3.6", "9.3.7", "9.3.8", "9.3.9"]

@@ -6,6 +6,12 @@
 # for these subcategory settings to be honoured over any legacy category
 # audit policy.
 
+- name: "PENDIENTES | Seccion 17 - controles contemplados que NO se aplican en esta ejecucion"
+  ansible.builtin.debug:
+    msg: "PENDIENTE {{ item }} | {{ win2025cis_pendientes_detalle[item] }}"
+  loop: "{{ win2025cis_pendientes_activos | select('match', '^17\\.') | list }}"
+  tags: ["section17", "pendientes"]
+
 - name: "CIS 17.x - Configure Advanced Audit Policy subcategories"
   ansible.windows.win_audit_policy_system:
     subcategory: "{{ item.subcategory }}"
@@ -16,4 +22,5 @@
   when: >-
     win2025cis_level >= item.level and
     (lookup('vars', 'win2025cis_rule_' + (item.id | regex_replace('\.', '_')), default=true))
+    and item.id not in win2025cis_pendientes_activos
   tags: ["section17", "audit_policy", "17.1.1", "17.2.1", "17.2.5", "17.2.6", "17.3.1", "17.3.2", "17.5.1", "17.5.2", "17.5.3", "17.5.4", "17.5.5", "17.5.6", "17.6.1", "17.6.2", "17.6.3", "17.6.4", "17.7.1", "17.7.2", "17.7.3", "17.7.4", "17.7.5", "17.8.1", "17.9.1", "17.9.2", "17.9.3", "17.9.4", "17.9.5"]
