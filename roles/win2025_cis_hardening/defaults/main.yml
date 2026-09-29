@@ -20,6 +20,77 @@ win2025cis_firewall_private_log_path: '%SystemRoot%\System32\logfiles\firewall\p
 win2025cis_firewall_public_log_path: '%SystemRoot%\System32\logfiles\firewall\publicfw.log'
 
 # ---------------------------------------------------------------------------
+# SELECCION DE SECCIONES CIS A EJECUTAR
+# Por defecto se ejecutan TODAS. En AWX se eligen al lanzar con la encuesta
+# (Survey) "Secciones CIS a ejecutar" (ver docs/awx_survey_secciones.json).
+# Por CLI:  -e '{"win2025cis_secciones": ["1", "17"]}'   o   -e win2025cis_secciones=1,17
+# Se aceptan valores "1" o "1 - Politicas de cuenta" (se toma el numero inicial).
+#   1  - Politicas de cuenta (contrasenas y bloqueo)
+#   2  - Politicas locales (derechos de usuario y opciones de seguridad)
+#   5  - Servicios del sistema
+#   9  - Firewall de Windows Defender
+#   17 - Politica de auditoria avanzada
+#   18 - Plantillas administrativas (equipo)
+#   19 - Plantillas administrativas (usuario)
+# ---------------------------------------------------------------------------
+win2025cis_secciones: ["1", "2", "5", "9", "17", "18", "19"]
+
+# Calculado - no modificar (normaliza lista / texto separado por comas / etiquetas).
+win2025cis_secciones_activas: '{{ ((win2025cis_secciones.split(",") if win2025cis_secciones is string else win2025cis_secciones) | default([], true)) | map("string") | map("trim") | map("regex_search", "^[0-9]+") | select | unique | list }}'
+
+# ---------------------------------------------------------------------------
+# CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE (WinRM)
+# Ansible administra este servidor por WinRM (HTTPS 5986, NTLM) usando WinRS.
+# Los siguientes controles NO SE RECOMIENDA ejecutarlos desde Ansible, o solo
+# con validacion previa, porque pueden dejar a Ansible SIN CONEXION:
+#
+# NO RECOMENDADOS (cortan la conexion siempre) -> estan en PENDIENTES:
+#   18.10.90.2.2  Allow remote server management through WinRM = Disabled
+#                 Justificacion: el servicio WinRM deja de aceptar conexiones
+#                 remotas; Ansible, AWX y PowerShell remoting quedan fuera.
+#                 Alternativa: aplicarlo por GPO de AD con excepcion para la
+#                 subred/servidor de AWX, o documentar la excepcion CIS.
+#   18.10.91.1    Allow Remote Shell Access = Disabled
+#                 Justificacion: deshabilita WinRS (shell remoto de WinRM).
+#                 Todos los modulos de Ansible para Windows se ejecutan dentro
+#                 de un shell WinRS; sin el, ningun modulo funciona.
+#                 Alternativa: la misma que el anterior (GPO + excepcion).
+#
+# CON VALIDACION PREVIA (pueden cortar la conexion segun el entorno):
+#   18.6.19.2.1   Disable IPv6 -> PENDIENTE. Requiere reinicio; si el listener
+#                 WinRM, DNS o alguna aplicacion usa IPv6, se pierde el acceso.
+#   9.1.1 / 9.2.1 / 9.3.1  Firewall state = On (hoy win2025cis_rule_* = false).
+#                 Justificacion: 9.x.2 ya fija "bloquear entrantes por defecto";
+#                 al encender el firewall, si no existe una regla que permita
+#                 TCP 5986 desde AWX, WinRM queda bloqueado. Crear la regla antes.
+#   9.3.4         Public profile: Apply local firewall rules = No.
+#                 Justificacion: si la red queda en perfil Publico (servidor sin
+#                 dominio), se ignora la regla local del 5986. (PENDIENTE en lab.)
+#   18.4.1        UAC restrictions for local accounts on network logons.
+#                 Justificacion: bloquea el acceso por red de administradores
+#                 LOCALES. Sin problema si Ansible usa cuenta de DOMINIO.
+#                 (PENDIENTE en lab.)
+#   2.2.21        Deny access from network: "Local account and member of
+#                 Administrators" (hoy win2025cis_rule_2_2_21 = false).
+#                 Justificacion: igual que 18.4.1, afecta cuentas LOCALES.
+#   2.3.1.3       Rename administrator account.
+#                 Justificacion: si ansible_user es "Administrator", despues
+#                 del cambio ese usuario ya no existe y la conexion falla.
+#   1.2.2         Account lockout threshold (5 intentos).
+#                 Justificacion: con cuenta local, 5 contrasenas erradas desde
+#                 Ansible/AWX bloquean la cuenta 15 minutos.
+#   2.3.11.6 / 2.3.11.9 / 2.3.11.10  NTLMv2 obligatorio y seguridad minima de
+#                 sesion NTLM (128 bits). Justificacion: el nodo de Ansible
+#                 necesita pywinrm/pyspnego actualizados; versiones antiguas
+#                 fallan la autenticacion NTLM.
+#   18.10.90.2.1 / 18.10.90.2.3  WinRM service: sin Basic / sin trafico sin
+#                 cifrar. Justificacion: solo afectan si Ansible usa Basic o
+#                 HTTP 5985; con NTLM sobre HTTPS 5986 no hay impacto.
+# En vars/section*.yml cada uno de estos controles tiene encima un comentario
+# "# >>> PENDIENTE" o "# >>> PRECAUCION ANSIBLE".
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
 # CONTROLES CIS "PENDIENTES"
 # Controles contemplados en el rol que NO se aplican por ahora, porque
 # cortarian la conexion de Ansible (WinRM) o requieren una validacion previa.

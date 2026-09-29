@@ -35,6 +35,8 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
   name: AllowOnlineTips
   data: 0
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: bloquea el acceso por red de administradores LOCALES; sin impacto si Ansible usa cuenta de dominio.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 18.4.1
   level: 1
   title: Ensure 'Apply UAC restrictions to local accounts on network logons' is set to 'Enabled' (MS only)
@@ -1207,13 +1209,15 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client
   name: AllowDigest
   data: 0
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: solo afecta si Ansible usa autenticacion Basic; con NTLM no hay impacto.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 18.10.90.2.1
   level: 1
   title: Ensure 'Allow Basic authentication' is set to 'Disabled'
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
   name: AllowBasic
   data: 0
-# >>> PENDIENTE - este control esta CONTEMPLADO pero se OMITE por ahora: deshabilitaria WinRM y Ansible perderia la sesion.
+# >>> PENDIENTE / NO RECOMENDADO DESDE ANSIBLE - CONTEMPLADO pero se OMITE: deshabilitaria WinRM y Ansible perderia la sesion.
 # >>> Se salta porque su id esta en win2025cis_controles_pendientes (defaults/main.yml).
 # >>> Para aplicarlo: comentar con # su linea en esa lista, o usar win2025cis_aplicar_pendientes.
 - id: 18.10.90.2.2
@@ -1222,6 +1226,8 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
   name: AllowAutoConfig
   data: 0
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: solo afecta si Ansible usa HTTP 5985 sin cifrar; con HTTPS 5986 no hay impacto.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 18.10.90.2.3
   level: 1
   title: Ensure 'Allow unencrypted traffic' is set to 'Disabled'
@@ -1234,7 +1240,7 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
   name: DisableRunAs
   data: 1
-# >>> PENDIENTE - este control esta CONTEMPLADO pero se OMITE por ahora: deshabilitaria WinRS y Ansible no podria ejecutar modulos.
+# >>> PENDIENTE / NO RECOMENDADO DESDE ANSIBLE - CONTEMPLADO pero se OMITE: deshabilitaria WinRS y Ansible no podria ejecutar modulos.
 # >>> Se salta porque su id esta en win2025cis_controles_pendientes (defaults/main.yml).
 # >>> Para aplicarlo: comentar con # su linea en esa lista, o usar win2025cis_aplicar_pendientes.
 - id: 18.10.91.1

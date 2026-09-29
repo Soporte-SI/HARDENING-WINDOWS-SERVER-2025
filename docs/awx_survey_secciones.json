@@ -1,0 +1,23 @@
+{
+  "name": "Hardening CIS Windows Server 2025",
+  "description": "Seleccion de secciones CIS a ejecutar",
+  "spec": [
+    {
+      "question_name": "Secciones CIS a ejecutar",
+      "question_description": "Marca las secciones que se aplicaran en esta ejecucion. Los controles que dejarian a Ansible sin conexion se omiten siempre (PENDIENTES).",
+      "required": true,
+      "type": "multiselect",
+      "variable": "win2025cis_secciones",
+      "choices": [
+        "1 - Politicas de cuenta (contrasenas y bloqueo)",
+        "2 - Politicas locales (derechos de usuario y opciones de seguridad)",
+        "5 - Servicios del sistema",
+        "9 - Firewall de Windows Defender",
+        "17 - Politica de auditoria avanzada",
+        "18 - Plantillas administrativas (equipo)",
+        "19 - Plantillas administrativas (usuario)"
+      ],
+      "default": "1 - Politicas de cuenta (contrasenas y bloqueo)\n2 - Politicas locales (derechos de usuario y opciones de seguridad)\n5 - Servicios del sistema\n9 - Firewall de Windows Defender\n17 - Politica de auditoria avanzada\n18 - Plantillas administrativas (equipo)\n19 - Plantillas administrativas (usuario)"
+    }
+  ]
+}

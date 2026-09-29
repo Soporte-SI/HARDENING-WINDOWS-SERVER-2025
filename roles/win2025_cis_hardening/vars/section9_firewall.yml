@@ -12,6 +12,8 @@
 # Log file path/name is organization-specific; override
 # win2025cis_firewall_<profile>_log_path in group_vars if needed.
 win2025cis_section9_firewall_items:
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: encender el firewall con 'bloquear entrantes' (9.1.2) corta WinRM si no existe regla para TCP 5986 desde AWX.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 9.1.1
   level: 1
   title: 'Windows Firewall: Domain: Firewall state'
@@ -61,6 +63,8 @@ win2025cis_section9_firewall_items:
   name: LogSuccessfulConnections
   data: 1
   type: dword
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: encender el firewall con 'bloquear entrantes' (9.2.2) corta WinRM si no existe regla para TCP 5986 desde AWX.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 9.2.1
   level: 1
   title: 'Windows Firewall: Private: Firewall state'
@@ -110,6 +114,8 @@ win2025cis_section9_firewall_items:
   name: LogSuccessfulConnections
   data: 1
   type: dword
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: encender el firewall con 'bloquear entrantes' (9.3.2) corta WinRM si no existe regla para TCP 5986 desde AWX.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 9.3.1
   level: 1
   title: 'Windows Firewall: Public: Firewall state'
@@ -131,6 +137,8 @@ win2025cis_section9_firewall_items:
   name: DisableNotifications
   data: 1
   type: dword
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: en perfil Publico (servidor sin dominio) se ignora la regla local del 5986 y WinRM queda bloqueado.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 9.3.4
   level: 1
   title: 'Windows Firewall: Public: Settings: Apply local firewall rules'

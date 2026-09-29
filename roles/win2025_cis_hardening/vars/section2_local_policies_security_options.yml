@@ -98,6 +98,8 @@ win2025cis_section2_user_rights:
   name: SeDebugPrivilege
   users:
   - Administrators
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: niega acceso por red a administradores LOCALES; si Ansible usa cuenta local, pierde la conexion. Sin impacto con cuenta de dominio.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 2.2.21
   level: 1
   title: Deny access to this computer from the network (MS only)
@@ -256,6 +258,8 @@ win2025cis_section2_secedit_items:
   key: ForceLogoffWhenHourExpire
   value: '1'
 win2025cis_section2_rename_items:
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: si ansible_user es 'Administrator', despues del renombrado ese usuario no existe y la conexion falla.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 2.3.1.3
   level: 1
   title: 'Accounts: Rename administrator account'
@@ -561,6 +565,8 @@ win2025cis_section2_registry_items:
   name: SupportedEncryptionTypes
   data: 2147483672
   type: dword
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: exige NTLMv2; el nodo de Ansible necesita pywinrm/pyspnego actualizados.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 2.3.11.6
   level: 1
   title: 'Network security: LAN Manager authentication level'
@@ -582,6 +588,8 @@ win2025cis_section2_registry_items:
   name: LDAPClientIntegrity
   data: 2
   type: dword
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: exige seguridad de sesion NTLMv2 + 128 bits; clientes pywinrm antiguos fallan la autenticacion.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 2.3.11.9
   level: 1
   title: 'Network security: Minimum session security for NTLM SSP based (including secure RPC) clients'
@@ -589,6 +597,8 @@ win2025cis_section2_registry_items:
   name: NTLMMinClientSec
   data: 537395200
   type: dword
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: exige seguridad de sesion NTLMv2 + 128 bits; clientes pywinrm antiguos fallan la autenticacion.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 2.3.11.10
   level: 1
   title: 'Network security: Minimum session security for NTLM SSP based (including secure RPC) servers'

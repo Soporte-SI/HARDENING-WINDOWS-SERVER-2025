@@ -46,6 +46,8 @@ win2025cis_section1_secedit_items:
 # (duration vieja, reset counter ya en 15). Fix: aplicar primero threshold y
 # reset counter, y AL FINAL duration - así, cuando se fija duration, el
 # reset counter objetivo ya está vigente y la regla se cumple.
+# >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: con cuenta LOCAL, 5 contrasenas erradas desde Ansible/AWX bloquean la cuenta 15 min.
+# >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
 - id: 1.2.2
   level: 1
   title: Account lockout threshold

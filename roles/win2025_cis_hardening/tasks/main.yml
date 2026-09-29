@@ -10,40 +10,53 @@
     dir: "{{ role_path }}/vars"
   tags: always
 
+- name: "SECCIONES | Secciones CIS seleccionadas para esta ejecucion"
+  ansible.builtin.debug:
+    msg: "Se ejecutaran las secciones: {{ win2025cis_secciones_activas | join(', ') }}"
+  tags: always
+
 - name: Include Section 1 - Account Policies tasks
   ansible.builtin.include_tasks: section1_account_policies.yml
+  when: "'1' in win2025cis_secciones_activas"
   tags: [section1, account_policies]
 
 - name: Include Section 2 - Local Policies / Security Options tasks
   ansible.builtin.include_tasks: section2_local_policies_security_options.yml
+  when: "'2' in win2025cis_secciones_activas"
   tags: [section2, local_policies, security_options]
 
 - name: Include Section 5 - System Services tasks
   ansible.builtin.include_tasks: section5_system_services.yml
+  when: "'5' in win2025cis_secciones_activas"
   tags: [section5, system_services]
 
 - name: Include Section 9 - Windows Defender Firewall tasks
   ansible.builtin.include_tasks: section9_firewall.yml
+  when: "'9' in win2025cis_secciones_activas"
   tags: [section9, firewall]
 
 - name: Include Section 17 - Advanced Audit Policy tasks
   ansible.builtin.include_tasks: section17_advanced_audit_policy.yml
+  when: "'17' in win2025cis_secciones_activas"
   tags: [section17, audit_policy]
 
 - name: Include Section 18 - Administrative Templates (Computer) tasks
   ansible.builtin.include_tasks: section18_administrative_templates_computer.yml
+  when: "'18' in win2025cis_secciones_activas"
   tags: [section18, administrative_templates_computer]
 
 - name: Include Section 19 - Administrative Templates (User) tasks
   ansible.builtin.include_tasks: section19_administrative_templates_user.yml
+  when: "'19' in win2025cis_secciones_activas"
   tags: [section19, administrative_templates_user]
 
 - name: "PENDIENTES Y OBSERVACIONES | Resumen final - controles a retomar"
   ansible.builtin.debug:
     msg:
-      total_pendientes: "{{ win2025cis_pendientes_activos | length }}"
-      pendientes: "{{ win2025cis_pendientes_activos }}"
+      secciones_ejecutadas: "{{ win2025cis_secciones_activas }}"
+      total_pendientes: "{{ win2025cis_pendientes_activos | select('match', '^(' ~ (win2025cis_secciones_activas | join('|')) ~ ')\\.') | list | length }}"
+      pendientes: "{{ win2025cis_pendientes_activos | select('match', '^(' ~ (win2025cis_secciones_activas | join('|')) ~ ')\\.') | list }}"
       aplicados_bajo_demanda: "{{ win2025cis_aplicar_pendientes | intersect(win2025cis_pendientes_detalle.keys() | list) }}"
-      total_observaciones: "{{ win2025cis_observaciones_detalle | length }}"
-      observaciones_aplicadas_a_revisar: "{{ win2025cis_observaciones_detalle.keys() | list }}"
+      total_observaciones: "{{ win2025cis_observaciones_detalle.keys() | list | select('match', '^(' ~ (win2025cis_secciones_activas | join('|')) ~ ')\\.') | list | length }}"
+      observaciones_aplicadas_a_revisar: "{{ win2025cis_observaciones_detalle.keys() | list | select('match', '^(' ~ (win2025cis_secciones_activas | join('|')) ~ ')\\.') | list }}"
   tags: always
