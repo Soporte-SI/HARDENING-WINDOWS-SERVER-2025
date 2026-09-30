@@ -155,6 +155,12 @@ win2025cis_controles_observaciones_extra: {}
 # Calculado - no modificar.
 win2025cis_observaciones_detalle: "{{ (win2025cis_controles_observaciones | default({}, true)) | combine(win2025cis_controles_observaciones_extra | default({}, true)) }}"
 
+# Limpieza (2026-09-30): elimina las 5 claves de registro con nombre invalido que
+# crearon versiones anteriores de 18.6.9.1, 18.6.9.2, 18.6.20.1, 18.10.77.2.1 y
+# 18.10.94.4.2 (ver vars/section18: win2025cis_section18_registry_cleanup_keys).
+# Es idempotente (si no existen, sale ok). Poner false para no ejecutarla.
+win2025cis_limpiar_claves_invalidas: true
+
 # ---------------------------------------------------------------------------
 # Per-control exception toggles - one boolean per IMPLEMENTED CIS control.
 # Set any of these to `false` (e.g. in group_vars/host_vars) to skip that

@@ -58,6 +58,17 @@
   tags: ["section18", "administrative_templates_computer", "18.9.19.5"]
   notify: Run gpupdate
 
+- name: "CIS 18.x - LIMPIEZA | Eliminar claves de registro con nombre invalido (creadas por la ruta concatenada de versiones anteriores)"
+  ansible.windows.win_regedit:
+    path: "{{ item.path }}"
+    state: absent
+    delete_key: true
+  loop: "{{ win2025cis_section18_registry_cleanup_keys | default([]) }}"
+  loop_control:
+    label: "{{ item.id }} - {{ item.path }}"
+  when: win2025cis_limpiar_claves_invalidas | default(true) | bool
+  tags: ["section18", "administrative_templates_computer", "limpieza"]
+
 - name: "OBSERVACIONES | Seccion 18 - controles aplicados que quedan anotados para revision"
   ansible.builtin.debug:
     msg: "OBSERVACION {{ item }} | {{ win2025cis_observaciones_detalle[item] }}"

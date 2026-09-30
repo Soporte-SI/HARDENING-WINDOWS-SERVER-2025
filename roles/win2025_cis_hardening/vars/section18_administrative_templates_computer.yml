@@ -255,16 +255,56 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation
   name: RequireEncryption
   data: 1
+# >>> CORREGIDO 2026-09-30: la extraccion del PDF concateno varios valores del control en una sola
+# >>> ruta de registro (Ansible creaba una clave con nombre invalido). Separado en sus valores reales.
 - id: 18.6.9.1
   level: 2
-  title: Ensure 'Turn on Mapper I/O (LLTDIO) driver' is set to 'Disabled'
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD:AllowLLTDIOOnDomainHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD:AllowLLTDIOOnPublicNetHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD:EnableLLTDIOHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD
+  title: 'Ensure ''Turn on Mapper I/O (LLTDIO) driver'' is set to ''Disabled'' [valor 1/4: AllowLLTDIOOnDomain]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD
+  name: AllowLLTDIOOnDomain
+  data: 0
+- id: 18.6.9.1
+  level: 2
+  title: 'Ensure ''Turn on Mapper I/O (LLTDIO) driver'' is set to ''Disabled'' [valor 2/4: AllowLLTDIOOnPublicNet]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD
+  name: AllowLLTDIOOnPublicNet
+  data: 0
+- id: 18.6.9.1
+  level: 2
+  title: 'Ensure ''Turn on Mapper I/O (LLTDIO) driver'' is set to ''Disabled'' [valor 3/4: EnableLLTDIO]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD
+  name: EnableLLTDIO
+  data: 0
+- id: 18.6.9.1
+  level: 2
+  title: 'Ensure ''Turn on Mapper I/O (LLTDIO) driver'' is set to ''Disabled'' [valor 4/4: ProhibitLLTDIOOnPrivateNet]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD
   name: ProhibitLLTDIOOnPrivateNet
+  data: 0
+# >>> CORREGIDO 2026-09-30: la extraccion del PDF concateno varios valores del control en una sola
+# >>> ruta de registro (Ansible creaba una clave con nombre invalido). Separado en sus valores reales.
+- id: 18.6.9.2
+  level: 2
+  title: 'Ensure ''Turn on Responder (RSPNDR) driver'' is set to ''Disabled'' [valor 1/4: AllowRspndrOnDomain]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD
+  name: AllowRspndrOnDomain
   data: 0
 - id: 18.6.9.2
   level: 2
-  title: Ensure 'Turn on Responder (RSPNDR) driver' is set to 'Disabled'
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD:AllowRspndrOnDomainHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD:AllowRspndrOnPublicNetHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD:EnableRspndrHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\LLTD
+  title: 'Ensure ''Turn on Responder (RSPNDR) driver'' is set to ''Disabled'' [valor 2/4: AllowRspndrOnPublicNet]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD
+  name: AllowRspndrOnPublicNet
+  data: 0
+- id: 18.6.9.2
+  level: 2
+  title: 'Ensure ''Turn on Responder (RSPNDR) driver'' is set to ''Disabled'' [valor 3/4: EnableRspndr]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD
+  name: EnableRspndr
+  data: 0
+- id: 18.6.9.2
+  level: 2
+  title: 'Ensure ''Turn on Responder (RSPNDR) driver'' is set to ''Disabled'' [valor 4/4: ProhibitRspndrOnPrivateNet]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD
   name: ProhibitRspndrOnPrivateNet
   data: 0
 - id: 18.6.10.2
@@ -300,10 +340,36 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SYSTEM\CurrentControlSet\Services\TCPIP6\Parameters
   name: DisabledComponents
   data: 255
+# >>> CORREGIDO 2026-09-30: la extraccion del PDF concateno varios valores del control en una sola
+# >>> ruta de registro (Ansible creaba una clave con nombre invalido). Separado en sus valores reales.
 - id: 18.6.20.1
   level: 2
-  title: Ensure 'Configuration of wireless settings using Windows Connect Now' is set to 'Disabled'
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars:EnableRegistrarsHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars:DisableUPnPRegistrarHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars:DisableInBand802DOT11RegistrarHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars:DisableFlashConfigRegistrarHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars
+  title: 'Ensure ''Configuration of wireless settings using Windows Connect Now'' is set to ''Disabled'' [valor 1/5: EnableRegistrars]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars
+  name: EnableRegistrars
+  data: 0
+- id: 18.6.20.1
+  level: 2
+  title: 'Ensure ''Configuration of wireless settings using Windows Connect Now'' is set to ''Disabled'' [valor 2/5: DisableUPnPRegistrar]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars
+  name: DisableUPnPRegistrar
+  data: 0
+- id: 18.6.20.1
+  level: 2
+  title: 'Ensure ''Configuration of wireless settings using Windows Connect Now'' is set to ''Disabled'' [valor 3/5: DisableInBand802DOT11Registrar]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars
+  name: DisableInBand802DOT11Registrar
+  data: 0
+- id: 18.6.20.1
+  level: 2
+  title: 'Ensure ''Configuration of wireless settings using Windows Connect Now'' is set to ''Disabled'' [valor 4/5: DisableFlashConfigRegistrar]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars
+  name: DisableFlashConfigRegistrar
+  data: 0
+- id: 18.6.20.1
+  level: 2
+  title: 'Ensure ''Configuration of wireless settings using Windows Connect Now'' is set to ''Disabled'' [valor 5/5: DisableWPDRegistrar]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars
   name: DisableWPDRegistrar
   data: 0
 - id: 18.6.20.2
@@ -1136,11 +1202,13 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\CurrentVersion\Software Protection Platform
   name: NoGenTicket
   data: 1
+# >>> CORREGIDO 2026-09-30: la extraccion del PDF concateno varios valores del control en una sola
+# >>> ruta de registro (Ansible creaba una clave con nombre invalido). Separado en sus valores reales.
 - id: 18.10.77.2.1
   level: 1
-  title: 'Ensure ''Configure Windows Defender SmartScreen'' is set to ''Enabled: Warn and prevent bypass'''
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\System:EnableSmartScreenHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\System
-  name: ShellSmartScreenLevel
+  title: 'Ensure ''Configure Windows Defender SmartScreen'' is set to ''Enabled: Warn and prevent bypass'' [valor 1/2: EnableSmartScreen (el valor 2/2 ShellSmartScreenLevel=Block es REG_SZ, en la lista string)]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\System
+  name: EnableSmartScreen
   data: 1
 - id: 18.10.81.1
   level: 2
@@ -1279,17 +1347,71 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
   name: ManagePreviewBuildsPolicyValue
   data: 1
+# >>> CORREGIDO 2026-09-30: la extraccion del PDF concateno varios valores del control en una sola
+# >>> ruta de registro (Ansible creaba una clave con nombre invalido). Separado en sus valores reales.
 - id: 18.10.94.4.2
   level: 1
-  title: 'Ensure ''Select when Quality Updates are received'' is set to ''Enabled: 0 days'''
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate:DeferQualityUpdatesHKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
-  name: DeferQualityUpdatesPeriodInDays
+  title: 'Ensure ''Select when Quality Updates are received'' is set to ''Enabled: 0 days'' [valor 1/2: DeferQualityUpdates]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+  name: DeferQualityUpdates
   data: 1
+- id: 18.10.94.4.2
+  level: 1
+  title: 'Ensure ''Select when Quality Updates are received'' is set to ''Enabled: 0 days'' [valor 2/2: DeferQualityUpdatesPeriodInDays (antes 1, CIS = 0)]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate
+  name: DeferQualityUpdatesPeriodInDays
+  data: 0
 - id: 18.11.1
   level: 1
   title: 'Ensure ''Disable HTTP proxy features: Disable WPAD'' is set to ''Enabled: Checked'''
   path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\WinHttp
   name: DisableWpad
+  data: 1
+# >>> CORREGIDO 2026-09-30: estos 7 controles estaban en la lista 'absent' (la tarea BORRABA el valor
+# >>> y el control quedaba sin aplicar). Movidos a la lista dword para que se configure su 'data'.
+# --- Agregado 2026-08-07: controles exigidos por Linea_Base_Hardening_CIS_WindowsServer2025_Final.xlsx
+# (linea base entregada por el banco) que antes estaban marcados manual/not_applicable.
+- id: 18.6.4.2
+  level: 1
+  title: "Ensure 'Configure NetBIOS settings' is set to 'Enabled: Disable NetBIOS name resolution on public networks'"
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient
+  name: EnableNetbios
+  data: 0
+- id: 18.7.6
+  level: 1
+  title: "Ensure 'Configure RPC listener settings: Authentication protocol to use for incoming RPC connections' is set to 'Enabled: Negotiate' or higher"
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\RPC
+  name: ForceKerberosForRpc
+  data: 0
+- id: 18.9.41.3
+  level: 1
+  title: "Ensure 'Configure SAM change password RPC methods policy' is set to 'Enabled: Block all change password RPC methods' (MS only)"
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\SAM
+  name: SamrChangeUserPasswordApiPolicy
+  data: 1
+- id: 18.10.16.1
+  level: 1
+  title: "Ensure 'Allow Diagnostic Data' is set to 'Enabled: Diagnostic data off (not recommended)' or 'Enabled: Send required diagnostic data'"
+  path: HKLM:\Software\Policies\Microsoft\Windows\DataCollection
+  name: AllowTelemetry
+  data: 1
+- id: 18.10.56.1
+  level: 1
+  title: "Ensure 'Turn off Push To Install service' is set to 'Enabled'"
+  path: HKLM:\SOFTWARE\Policies\Microsoft\PushToInstall
+  name: DisablePushToInstall
+  data: 1
+- id: 18.10.57.3.10.2
+  level: 1
+  title: "Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'"
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services
+  name: MaxDisconnectionTime
+  data: 60000
+- id: 18.10.81.2
+  level: 1
+  title: "Ensure 'Allow Windows Ink Workspace' is set to 'Enabled: On, but disallow access above lock' OR 'Enabled: Disabled'"
+  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace
+  name: AllowWindowsInkWorkspace
   data: 1
 win2025cis_section18_registry_string_items:
 - id: 18.5.1
@@ -1336,6 +1458,13 @@ win2025cis_section18_registry_string_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System
   name: Retention
   data: '0'
+# >>> CORREGIDO 2026-09-30: 18.10.77.2.1 valor 2/2 (REG_SZ). CIS: ShellSmartScreenLevel = Block.
+- id: 18.10.77.2.1
+  level: 1
+  title: 'Ensure ''Configure Windows Defender SmartScreen'' is set to ''Enabled: Warn and prevent bypass'' [valor 2/2: ShellSmartScreenLevel]'
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\System
+  name: ShellSmartScreenLevel
+  data: 'Block'
 win2025cis_section18_registry_absent_items:
 - id: 18.9.19.5
   level: 1
@@ -1343,47 +1472,19 @@ win2025cis_section18_registry_absent_items:
   path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
   name: DisableBkGndGroupPolicy
 
-# --- Agregado 2026-08-07: controles exigidos por Linea_Base_Hardening_CIS_WindowsServer2025_Final.xlsx
-# (linea base entregada por el banco) que antes estaban marcados manual/not_applicable.
-- id: 18.6.4.2
-  level: 1
-  title: "Ensure 'Configure NetBIOS settings' is set to 'Enabled: Disable NetBIOS name resolution on public networks'"
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\DNSClient
-  name: EnableNetbios
-  data: 0
-- id: 18.7.6
-  level: 1
-  title: "Ensure 'Configure RPC listener settings: Authentication protocol to use for incoming RPC connections' is set to 'Enabled: Negotiate' or higher"
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers\RPC
-  name: ForceKerberosForRpc
-  data: 0
-- id: 18.9.41.3
-  level: 1
-  title: "Ensure 'Configure SAM change password RPC methods policy' is set to 'Enabled: Block all change password RPC methods' (MS only)"
-  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\SAM
-  name: SamrChangeUserPasswordApiPolicy
-  data: 1
-- id: 18.10.16.1
-  level: 1
-  title: "Ensure 'Allow Diagnostic Data' is set to 'Enabled: Diagnostic data off (not recommended)' or 'Enabled: Send required diagnostic data'"
-  path: HKLM:\Software\Policies\Microsoft\Windows\DataCollection
-  name: AllowTelemetry
-  data: 1
-- id: 18.10.56.1
-  level: 1
-  title: "Ensure 'Turn off Push To Install service' is set to 'Enabled'"
-  path: HKLM:\SOFTWARE\Policies\Microsoft\PushToInstall
-  name: DisablePushToInstall
-  data: 1
-- id: 18.10.57.3.10.2
-  level: 1
-  title: "Ensure 'Set time limit for disconnected sessions' is set to 'Enabled: 1 minute'"
-  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services
-  name: MaxDisconnectionTime
-  data: 60000
-- id: 18.10.81.2
-  level: 1
-  title: "Ensure 'Allow Windows Ink Workspace' is set to 'Enabled: On, but disallow access above lock' OR 'Enabled: Disabled'"
-  path: HKLM:\SOFTWARE\Policies\Microsoft\WindowsInkWorkspace
-  name: AllowWindowsInkWorkspace
-  data: 1
+# ---------------------------------------------------------------------------
+# LIMPIEZA 2026-09-30: claves de registro con nombre invalido que crearon las versiones
+# anteriores de 18.6.9.1, 18.6.9.2, 18.6.20.1, 18.10.77.2.1 y 18.10.94.4.2 (ruta concatenada).
+# Se eliminan con su contenido. No afectan otras claves. Desactivar con win2025cis_limpiar_claves_invalidas: false
+# ---------------------------------------------------------------------------
+win2025cis_section18_registry_cleanup_keys:
+- id: 18.6.9.1
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD:AllowLLTDIOOnDomainHKEY_LOCAL_MACHINE
+- id: 18.6.9.2
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LLTD:AllowRspndrOnDomainHKEY_LOCAL_MACHINE
+- id: 18.6.20.1
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WCN\Registrars:EnableRegistrarsHKEY_LOCAL_MACHINE
+- id: 18.10.77.2.1
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\System:EnableSmartScreenHKEY_LOCAL_MACHINE
+- id: 18.10.94.4.2
+  path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate:DeferQualityUpdatesHKEY_LOCAL_MACHINE
