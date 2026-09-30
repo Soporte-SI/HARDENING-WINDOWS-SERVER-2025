@@ -641,7 +641,7 @@ win2025cis_section18_registry_dword_items:
   title: Ensure 'Turn off Windows Error Reporting' is set to 'Enabled'
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Error Reporting
   name: Disabled
-  data: 0
+  data: 1   # CORREGIDO 2026-10-01 (escaneo CIS): antes 0; CIS y linea base del banco = 1
 - id: 18.9.20.1.13
   level: 2
   title: Ensure 'Turn off Windows Error Reporting' is set to 'Enabled'
@@ -659,7 +659,7 @@ win2025cis_section18_registry_dword_items:
   title: 'Ensure ''Support device authentication using certificate'' is set to ''Enabled: Automatic'''
   path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\kerberos\parameters
   name: DevicePKInitEnabled
-  data: 0
+  data: 1   # CORREGIDO 2026-10-01 (escaneo CIS): antes 0; 'Enabled: Automatic' = Enabled 1 + Behavior 0
 - id: 18.9.24.1
   level: 1
   title: 'Ensure ''Enumeration policy for external devices incompatible with Kernel DMA Protection'' is set to ''Enabled:

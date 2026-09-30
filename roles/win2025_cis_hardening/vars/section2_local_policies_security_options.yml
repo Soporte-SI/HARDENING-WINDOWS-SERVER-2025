@@ -558,12 +558,15 @@ win2025cis_section2_registry_items:
   name: AllowOnlineID
   data: 0
   type: dword
+# >>> CORREGIDO 2026-10-01 (escaneo CIS SummaryView): ruta y valor incorrectos. CIS y la linea base del banco
+# >>> leen HKLM\...\Policies\System\Kerberos\Parameters = 2147483640 (AES128 + AES256 + Future).
+# >>> Antes: HKLM\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters = 2147483672.
 - id: 2.3.11.4
   level: 1
   title: 'Network security: Configure encryption types allowed for Kerberos'
-  path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\Kerberos\Parameters
+  path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters
   name: SupportedEncryptionTypes
-  data: 2147483672
+  data: 2147483640
   type: dword
 # >>> PRECAUCION ANSIBLE - puede dejar a Ansible sin conexion: exige NTLMv2; el nodo de Ansible necesita pywinrm/pyspnego actualizados.
 # >>> Justificacion completa en defaults/main.yml (CONTROLES CON RIESGO PARA LA CONEXION DE ANSIBLE).
