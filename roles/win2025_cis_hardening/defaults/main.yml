@@ -136,7 +136,7 @@ win2025cis_controles_observaciones:
   "1.2.1": "Account lockout duration: el rol aplica 15 min. En 10.110.9.187 estaba en 1440 (mas estricto). Revisar."
   "1.2.2": "Account lockout threshold: el rol aplica 5 intentos. En 10.110.9.187 estaba en 3 (mas estricto). Revisar."
   "1.2.4": "Reset account lockout counter: el rol aplica 15 min. En 10.110.9.187 estaba en 1440. Revisar."
-  "18.10.26.2.2": "Security log max size: el rol fija 196.608 KB (minimo CIS). En 10.110.9.187 estaba en 2.097.152 KB: el log se REDUCE. Revisar."
+  # 18.10.26.2.2 retirado de observaciones (2026-09-30): el rol ahora fija 2.097.152 KB, igual que la GPO del banco.
   "17.5.1": "Audit Account Lockout: CIS pide 'incluir Failure'; el rol deja SOLO Failure y quita Success si ya estaba. Revisar para no perder auditoria."
   "17.5.3": "Audit Logoff: el rol deja SOLO Success y quita Failure si ya estaba. Revisar."
   "17.5.6": "Audit Special Logon: el rol deja SOLO Success y quita Failure si ya estaba. Revisar."

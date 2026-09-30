@@ -1002,12 +1002,14 @@ win2025cis_section18_registry_dword_items:
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application
   name: MaxSize
   data: 32768
+# >>> AJUSTADO 2026-09-30: CIS exige 196.608 KB O MAS. La GPO de dominio del banco fija 2.097.152 KB (2 GB)
+# >>> y restauraba el valor despues de cada Run (job 345). Se alinea el rol con la GPO: cumple CIS y no pelean.
 - id: 18.10.26.2.2
   level: 1
   title: 'Ensure ''Security: Specify the maximum log file size (KB)'' is set to ''Enabled: 196,608 or greater'''
   path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security
   name: MaxSize
-  data: 196608
+  data: 2097152   # antes 196608 (minimo CIS)
 - id: 18.10.26.3.2
   level: 1
   title: 'Ensure ''Setup: Specify the maximum log file size (KB)'' is set to ''Enabled: 32,768 or greater'''
