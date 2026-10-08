@@ -192,6 +192,8 @@ docs/coverage_matrix.csv                    # every one of the 428 extracted con
 
 ## Acta de Entrega-Recepción
 
+Documento completo (PDF): [docs/Acta_Entrega_Recepcion_Playbook02_Hardening_Windows2025.pdf](docs/Acta_Entrega_Recepcion_Playbook02_Hardening_Windows2025.pdf)
+
 | Campo | Detalle |
 |---|---|
 | Proyecto | Desarrollo de 18 Playbooks de automatización con Ansible/AWX - Banco Solidario |
