@@ -189,3 +189,19 @@ roles/win2025_cis_hardening/
   meta/main.yml
 docs/coverage_matrix.csv                    # every one of the 428 extracted controls and its disposition
 ```
+
+## Acta de Entrega-Recepción
+
+| Campo | Detalle |
+|---|---|
+| Proyecto | Desarrollo de 18 Playbooks de automatización con Ansible/AWX - Banco Solidario |
+| Playbook entregado | Playbook 2 de 18: Hardening CIS Windows Server 2025 (Benchmark v2.1.0, Nivel 1 + 2, Member Server) |
+| Commit / etiqueta entregada | Código Completado |
+| Fecha de elaboración del documento | 8 de octubre de 2026 |
+
+| ENTREGA - GMS | RECIBE - BANCO SOLIDARIO |
+|---|---|
+| **Juan Pablo Castillo** | **Jeremy Moreno** |
+| Líder de Proyecto | Seguridad de la Información |
+| Fecha de elaboración del documento: 8 de octubre de 2026 | Fecha de elaboración del documento: 8 de octubre de 2026 |
+| Firma: ______________________ | Firma: ______________________ |
